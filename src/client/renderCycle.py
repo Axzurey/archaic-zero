@@ -1,11 +1,12 @@
 import threading
+import time
 import pygame
-from typing import Callable, Union
+from typing import Callable
 
 _tasks: dict[str, Callable[[None], None]] = {}
 
 localEnv = {
-    "renderFPS": 5
+    "renderFPS": 30
 }
 
 _screen: pygame.Surface = None
@@ -36,8 +37,13 @@ def _renderCycle() -> None:
     clock = pygame.time.Clock()
     while (not clientClosing()):
         clock.tick(localEnv['renderFPS'])
-        for task in _tasks.values():
-            task()
+        global lastUpdate
+        now = time.time()
+        dt = now - lastUpdate
+        lastUpdate = now
+        for i in list(_tasks):
+            task = _tasks[i]
+            task(dt)
         pygame.display.flip()
 
 
