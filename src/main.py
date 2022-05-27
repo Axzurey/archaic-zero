@@ -1,6 +1,9 @@
 import pygame
 import client.renderCycle as renderCycle
 import client.inputService as inputService
+from modules.sprite import sprite
+
+pygame.init()
 
 renderCycle.startCycle()
 inputService.initializeInputService()
@@ -8,15 +11,15 @@ inputService.initializeInputService()
 screen = pygame.display.set_mode((1366, 720))
 
 screenCol = (255, 0, 255)
- 
-posX = 1366 / 2 - 10
- 
-posY = 720 / 2 - 10
- 
-circle = pygame.draw.circle(screen, (0, 255, 255), (posX, posY), 10)
 
 def updateScreen():
     screen.fill(screenCol)
-    pygame.display.flip()
 
-renderCycle.addTaskToRenderCycle()
+renderCycle.setScreen(screen)
+
+renderCycle.addTaskToRenderCycle(updateScreen, '_mainUpdate')
+
+sp = sprite((100, 100), (100, 100), 'src/images/cookie.png')
+
+while (not renderCycle.clientClosing()):
+    pass

@@ -7,11 +7,11 @@ from client.renderCycle import clientClosing
 
 def inputLoop() -> None:
     while not clientClosing():
-        print(pygame.key.get_pressed())
-
+        pass
 
 _inputServiceInitialized = False
 def initializeInputService() -> None:
+    global _inputServiceInitialized
     if (_inputServiceInitialized): return
     _inputServiceInitialized = True
 
