@@ -1,3 +1,4 @@
+import inspect
 import threading
 import time
 import pygame
@@ -6,7 +7,8 @@ from typing import Callable
 _tasks: dict[str, Callable[[None], None]] = {}
 
 localEnv = {
-    "renderFPS": 30
+    "renderFPS": 60,
+    "displayResolution": (1366, 768),
 }
 
 _screen: pygame.Surface = None
@@ -18,12 +20,6 @@ def setScreen(screen):
 def getScreen():
     return _screen
 
-def clientClosing() -> bool:
-    for ev in pygame.event.get():
-            if ev.type == pygame.QUIT:
-                return True
-    return False
-
 def addTaskToRenderCycle(task: Callable[[None], None], mid: str) -> None:
     _tasks[mid] = task
 
@@ -31,19 +27,38 @@ def removeTaskFromRenderCycle(mid: str) -> None:
     if mid in _tasks:
         del _tasks[mid]
 
-
+clientClosing = False
 lastUpdate = 0
 def _renderCycle() -> None:
     clock = pygame.time.Clock()
-    while (not clientClosing()):
+
+    global clientClosing
+    
+    while (not clientClosing):
+
         clock.tick(localEnv['renderFPS'])
+
         global lastUpdate
+
         now = time.time()
         dt = now - lastUpdate
         lastUpdate = now
+
+        events = pygame.event.get()
+
+        for ev in events:
+            if ev.type == pygame.QUIT:
+                clientClosing = True
+
+
         for i in list(_tasks):
             task = _tasks[i]
-            task(dt)
+            p = inspect.signature(task).parameters
+            p = p.keys()
+            if len(p) == 1:
+                task(dt)
+            elif len(p) == 2:
+                task(dt, events)
         pygame.display.flip()
 
 
@@ -57,6 +72,4 @@ def startCycle() -> None:
         
     cycleStarted = True
 
-    thread = threading.Thread(target=_renderCycle)
-    thread.daemon = True
-    thread.start()
+    _renderCycle()

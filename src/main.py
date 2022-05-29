@@ -1,14 +1,18 @@
+import time
 import pygame
 import client.renderCycle as renderCycle
-import client.inputService as inputService
+import client.uiService as uiService
+from data.exposed import addEntity
+from game import createButton, createEntity
 from modules.entity import entity
-from modules.sprite import sprite
+from modules.gui.textLabel import textLabel
+from modules.signal import phxSignal
 
 pygame.init()
 
-renderCycle.startCycle()
+res = renderCycle.localEnv['displayResolution']
 
-screen = pygame.display.set_mode((1366, 720))
+screen = pygame.display.set_mode(res)
 
 screenCol = (255, 0, 255)
 
@@ -17,11 +21,16 @@ def updateScreen(_dt):
 
 renderCycle.setScreen(screen)
 
+uiService.initializeUiService()
+
 renderCycle.addTaskToRenderCycle(updateScreen, '_mainUpdate')
 
-ent = entity()
+time.sleep(1)
 
-renderCycle.addTaskToRenderCycle(ent.walkLogic, 'spriteUpd')
+player = createEntity(pygame.Vector2(100, 100), pygame.Vector2(50, 50), 'src/images/player_top.png')
 
-while (not renderCycle.clientClosing()):
-    pass
+button1 = createButton(pygame.Vector2(300, 500), pygame.Vector2(150, 50), 'hello!')
+
+button1.mouseButton1Click.connect(lambda: print('button1 clicked'))
+
+renderCycle.startCycle()
