@@ -26,8 +26,6 @@ def createButton(position: Vector2, size: Vector2, text: str):
     t.setPosition(position)
     t.setSize(size)
     t.setText(text)
-
-    #renderCycle.addTaskToRenderCycle(t.update, t.mid + '_update')
     return t
 
 def createLabel():

@@ -9,7 +9,7 @@ uiManager: pygame_gui.UIManager = None
 
 def startUiCycle():
     global uiManager
-    uiManager = pygame_gui.UIManager(renderCycle.localEnv["displayResolution"])
+    uiManager = pygame_gui.UIManager(renderCycle.localEnv["displayResolution"], 'src/modules/themes/current.json')
 
     print('ui manager started')
 

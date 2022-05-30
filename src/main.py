@@ -2,13 +2,12 @@ import time
 import pygame
 import client.renderCycle as renderCycle
 import client.uiService as uiService
-from data.exposed import addEntity
-from game import createButton, createEntity
-from modules.entity import entity
-from modules.gui.textLabel import textLabel
-from modules.signal import phxSignal
+from game import createButton, createEntity, loadDefaultTheme
+import game
 
 pygame.init()
+
+loadDefaultTheme()
 
 res = renderCycle.localEnv['displayResolution']
 
@@ -32,5 +31,9 @@ player = createEntity(pygame.Vector2(100, 100), pygame.Vector2(50, 50), 'src/ima
 button1 = createButton(pygame.Vector2(300, 500), pygame.Vector2(150, 50), 'hello!')
 
 button1.mouseButton1Click.connect(lambda: print('button1 clicked'))
+
+game.modifyThemeColors(button1.mid, {
+    "normal_bg": '#00ffff'
+})
 
 renderCycle.startCycle()
