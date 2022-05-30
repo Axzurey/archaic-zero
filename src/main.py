@@ -2,8 +2,10 @@ import time
 import pygame
 import client.renderCycle as renderCycle
 import client.uiService as uiService
-from game import createButton, createEntity, loadDefaultTheme
+from game import createButton, createEntity
 import game
+
+from modules.themeManager import loadDefaultTheme
 
 pygame.init()
 
@@ -32,8 +34,6 @@ button1 = createButton(pygame.Vector2(300, 500), pygame.Vector2(150, 50), 'hello
 
 button1.mouseButton1Click.connect(lambda: print('button1 clicked'))
 
-game.modifyThemeColors(button1.mid, {
-    "normal_bg": '#00ffff'
-})
+button1.backgroundColor = "#00FFFF"
 
 renderCycle.startCycle()

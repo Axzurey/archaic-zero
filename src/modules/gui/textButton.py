@@ -1,8 +1,9 @@
+import modules.maps as maps
 import uuid
 from pygame import Rect, Vector2
 import pygame_gui
 from pygame_gui.core import ObjectID
-import pygame
+import modules.themeManager as themeManager
 
 import client.uiService as uiService
 from modules.signal import phxSignal
@@ -24,6 +25,16 @@ class textButton:
         "textColorHover":"#FFFFFF",
         "textColorDisabled":"#6d736f",
         'borderColor': '#DDDDDD',
+        'borderColorHover': '#FFFFFF',
+        'borderColorDisabled': '#808080',
+
+        'mid': 'none',
+        'instance': 'none',
+
+        'mouseButton1Click': 'none',
+        'onHoverStart': 'none',
+        'onHoverStop': 'none',
+        'doubleClick': 'none',
     }
 
     colors = {
@@ -50,11 +61,21 @@ class textButton:
     }
 
     def __getattr__(self, index):
-        if hasattr(self.colors, index):
-            return self.colors[index]
+        if (maps.colorNameConversion.get(index)):
+            return self.colors[maps.colorNameConversionInverse[index]]
+        elif self.properties.get(index):
+            return self.properties[index]
 
     def __setattr__(self, index, value):
-
+        if maps.colorNameConversion.get(index):
+            self.properties[index] = value
+            self.colors[maps.colorNameConversion[index]] = value
+            themeManager.modifyThemeColors(self.mid, self.colors)
+        elif self.properties.get(index):
+            self.properties[index] = value
+        else:
+            raise Exception(f'Property {index} does not exist on this class')
+            
 
     def __init__(self):
 
@@ -91,6 +112,8 @@ class textButton:
     def update(self, _dt, events):
 
         self.instance.colours = self.colors
+
+        self.fix()
 
         for event in events:
             if hasattr(event, 'ui_element') and event.ui_element == self.instance:
