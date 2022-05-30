@@ -55,7 +55,9 @@ def _renderCycle() -> None:
             task = _tasks[i]
             p = inspect.signature(task).parameters
             p = p.keys()
-            if len(p) == 1:
+            if len(p) == 0:
+                task()
+            elif len(p) == 1:
                 task(dt)
             elif len(p) == 2:
                 task(dt, events)
