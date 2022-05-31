@@ -1,3 +1,5 @@
+from ast import arg
+import threading
 from pygame import Vector2
 import client.renderCycle as renderCycle
 from data.exposed import addEntity
@@ -6,6 +8,12 @@ from modules.gui.textLabel import textLabel
 from modules.gui.textButton import textButton
 
 entities: dict[str, entity] = {}
+
+def createThread(f: callable, *a: any):
+    t = threading.Thread(target=f, args=a)
+    t.daemon = True
+    t.start()
+    return t
 
 def createEntity(position: Vector2, size: Vector2, imagePath: str, walkLogicOverride: callable = None):
     ent = entity(position, size, imagePath)

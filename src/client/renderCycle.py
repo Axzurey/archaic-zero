@@ -4,6 +4,12 @@ import time
 import pygame
 from typing import Callable
 
+def createThread(f: callable, *a: any):
+    t = threading.Thread(target=f, args=a)
+    t.daemon = True
+    t.start()
+    return t
+
 _tasks: dict[str, Callable[[None], None]] = {}
 
 localEnv = {
@@ -53,14 +59,17 @@ def _renderCycle() -> None:
 
         for i in list(_tasks):
             task = _tasks[i]
+
             p = inspect.signature(task).parameters
             p = p.keys()
             if len(p) == 0:
-                task()
+                createThread(task)
             elif len(p) == 1:
-                task(dt)
+                createThread(task, dt)
             elif len(p) == 2:
-                task(dt, events)
+                createThread(task, dt, events)
+            else:
+                print('invalid args:', p)
         pygame.display.flip()
 
 

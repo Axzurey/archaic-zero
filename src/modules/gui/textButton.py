@@ -1,3 +1,4 @@
+import inspect
 import modules.maps as maps
 import uuid
 from pygame import Rect, Vector2
@@ -111,13 +112,12 @@ class textButton:
 
     def update(self, _dt, events):
 
-        self.instance.colours = self.colors
-
         self.fix()
 
         for event in events:
             if hasattr(event, 'ui_element') and event.ui_element == self.instance:
                 if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                    print('actually pressed')
                     self.mouseButton1Click.emit()
                 elif event.type == pygame_gui.UI_BUTTON_DOUBLE_CLICKED:
                     self.doubleClick.emit()
@@ -125,3 +125,5 @@ class textButton:
                     self.onHoverStop.emit()
                 elif event.type == pygame_gui.UI_BUTTON_ON_HOVERED:
                     self.onHoverStart.emit()
+
+        self.instance.colours = self.colors
