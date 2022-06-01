@@ -3,12 +3,7 @@ import threading
 import time
 import pygame
 from typing import Callable
-
-def createThread(f: callable, *a: any):
-    t = threading.Thread(target=f, args=a)
-    t.daemon = True
-    t.start()
-    return t
+from modules.quark import createThread
 
 _tasks: dict[str, Callable[[None], None]] = {}
 

@@ -4,16 +4,11 @@ from pygame import Vector2
 import client.renderCycle as renderCycle
 from data.exposed import addEntity
 from modules.entity import entity
+from modules.gui.frame import frame
 from modules.gui.textLabel import textLabel
 from modules.gui.textButton import textButton
 
 entities: dict[str, entity] = {}
-
-def createThread(f: callable, *a: any):
-    t = threading.Thread(target=f, args=a)
-    t.daemon = True
-    t.start()
-    return t
 
 def createEntity(position: Vector2, size: Vector2, imagePath: str, walkLogicOverride: callable = None):
     ent = entity(position, size, imagePath)
@@ -28,6 +23,12 @@ def createEntity(position: Vector2, size: Vector2, imagePath: str, walkLogicOver
     entities[ent.id] = ent
 
     return ent
+
+def createFrame(position: Vector2, size: Vector2):
+    t = frame()
+    t.setPosition(position)
+    t.setSize(size)
+    return t
 
 def createButton(position: Vector2, size: Vector2, text: str):
     t = textButton()

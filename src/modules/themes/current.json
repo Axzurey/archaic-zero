@@ -1,7 +1,7 @@
 {
     "defaults": {
         "colours": {
-            "normal_bg": "#000000",
+            "normal_bg": "#00FFFF",
             "hovered_bg": "#35393e",
             "disabled_bg": "#25292e",
             "selected_bg": "#193754",
@@ -23,9 +23,9 @@
             "unfilled_bar": "#CCCCCC"
         }
     },
-    "d188b478-08d6-4fff-b582-ded04ad9c19c": {
+    "7ac9c6b4-52a8-41cf-9a85-66fe48fa02bc": {
         "colours": {
-            "normal_bg": "#000000",
+            "normal_bg": "#00FFFF",
             "hovered_bg": "#35393e",
             "disabled_bg": "#25292e",
             "selected_bg": "#193754",

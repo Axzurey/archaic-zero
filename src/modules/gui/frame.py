@@ -1,6 +1,4 @@
 import inspect
-
-import pygame
 import modules.maps as maps
 import uuid
 from pygame import Rect, Vector2
@@ -14,10 +12,9 @@ from modules.signal import phxSignal
 import client.renderCycle as renderCycle
 
 
-class textButton:
+class frame:
     
     properties = {
-        'text': '[notext]',
         'size': Vector2(100, 50),
         'position': Vector2(200, 200),
         'rect': Rect(Vector2(200, 200), Vector2(100, 50)),
@@ -25,9 +22,6 @@ class textButton:
         'backgroundColor': '#45494e',
         "backgroundColorHover":"#35393e",
         "backgroundColordisabled":"#25292e",
-        'textColor': '#c5cbd8',
-        "textColorHover":"#FFFFFF",
-        "textColorDisabled":"#6d736f",
         'borderColor': '#DDDDDD',
         'borderColorHover': '#FFFFFF',
         'borderColorDisabled': '#808080',
@@ -46,13 +40,6 @@ class textButton:
         'cornerRadius': 10, #only for rounded_rectange
         'borderWidth': 2,
         'shadowWidth': 2,
-        'textAlignH': 'center', #left, center, right
-        'textAlignV': 'center', #top, center, bottom
-    }
-
-    font = {
-        'name': 'montserrat',
-        'size': 20,
     }
 
     heiarchy = {
@@ -100,7 +87,6 @@ class textButton:
             self.properties[index] = value
         elif self.heiarchy.get(index):
             if (index == 'parent'):
-                print('ws')
                 switchParent(self, value)
             else:
                 self.heiarchy[index] = value
@@ -112,7 +98,7 @@ class textButton:
 
         self.mid = str(uuid.uuid4())
         
-        self.instance = pygame_gui.elements.UIButton(relative_rect=self.rect, text=self.text, manager=uiService.uiManager, 
+        self.instance = pygame_gui.elements.UIPanel(relative_rect=self.rect, manager=uiService.uiManager, starting_layer_height=1,
         object_id=ObjectID(self.mid, '@button'))
         renderCycle.addTaskToRenderCycle(self.update, self.mid + '_update')
 
@@ -121,11 +107,10 @@ class textButton:
         self.onHoverStop = phxSignal()
         self.doubleClick = phxSignal()
 
-    def setText(self, text):
-        self.text = text
-        self.fix()
-
-    def setPosition(self, position: pygame.Vector2):
+    def setPosition(self, position):
+        
+        if self.parent and type(self.parent) != str:
+            position += self.parent.position
         self.position = position
         self.rect = Rect(self.position, self.size)
         self.fix()
@@ -136,13 +121,8 @@ class textButton:
         self.fix()
 
     def fix(self):
-        position = Vector2(self.position.x, self.position.y)
-        if self.parent and type(self.parent) != str:
-            position += self.parent.position
-
-        self.instance.set_position(position)
+        self.instance.set_position(self.position)
         self.instance.set_dimensions(self.size)
-        self.instance.set_text(self.text)
 
     def setColors(self):
         self.instance.colours = self.colors

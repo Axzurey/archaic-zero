@@ -2,7 +2,8 @@ import time
 import pygame
 import client.renderCycle as renderCycle
 import client.uiService as uiService
-from game import createButton, createEntity, createThread
+from game import createButton, createEntity, createFrame
+from modules.quark import createThread
 from modules.themeManager import loadDefaultTheme
 
 pygame.init()
@@ -26,24 +27,22 @@ renderCycle.addTaskToRenderCycle(updateScreen, '_mainUpdate')
 
 time.sleep(1)
 
-player = createEntity(pygame.Vector2(100, 100), pygame.Vector2(50, 50), 'src/images/player_top.png')
+player = createEntity(pygame.Vector2(0, 0), pygame.Vector2(50, 50), 'src/images/player_top.png')
 
-button1 = createButton(pygame.Vector2(300, 500), pygame.Vector2(150, 50), 'hello!')
+button1 = createButton(pygame.Vector2(50, 50), pygame.Vector2(150, 50), 'hello!')
 
 button1.mouseButton1Click.connect(lambda: print('button1 clicked'))
 
 button1.backgroundColor = "#00FFFF"
 
-def t():
-    while (True):
-        time.sleep(2)
-        
-        hexs = ''
-        for i in range(6):
-            hexs += str(hex(int(time.time() * 1000) % 16))[2:]
-        button1.backgroundColor = '#' + hexs
-        print(hexs)
+frame1 = createFrame(pygame.Vector2(100, 100), pygame.Vector2(200, 200))
 
-createThread(t)
+#button1.position = pygame.Vector2(0, 0)
+
+button1.parent = frame1
+
+print(button1.parent, button1.children)
+
+print(frame1.parent, frame1.children)
 
 renderCycle.startCycle()
