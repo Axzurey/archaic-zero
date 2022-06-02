@@ -30,8 +30,8 @@ def createFrame(position: Vector2, size: Vector2):
     t.setSize(size)
     return t
 
-def createButton(position: Vector2, size: Vector2, text: str):
-    t = textButton()
+def createButton(position: Vector2, size: Vector2, text: str, parent: frame = None):
+    t = textButton(parent)
     t.setPosition(position)
     t.setSize(size)
     t.setText(text)

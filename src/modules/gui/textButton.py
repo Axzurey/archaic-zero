@@ -1,5 +1,3 @@
-import inspect
-
 import pygame
 import modules.maps as maps
 import uuid
@@ -108,11 +106,16 @@ class textButton:
             raise Exception(f'Property {index} does not exist on this class')
             
 
-    def __init__(self):
+    def __init__(self, parent):
+
+        if (parent):
+            self.parent = parent
 
         self.mid = str(uuid.uuid4())
         
         self.instance = pygame_gui.elements.UIButton(relative_rect=self.rect, text=self.text, manager=uiService.uiManager, 
+        container=parent.instance,
+        starting_height=2,
         object_id=ObjectID(self.mid, '@button'))
         renderCycle.addTaskToRenderCycle(self.update, self.mid + '_update')
 
@@ -136,11 +139,12 @@ class textButton:
         self.fix()
 
     def fix(self):
-        position = Vector2(self.position.x, self.position.y)
-        if self.parent and type(self.parent) != str:
-            position += self.parent.position
+        #position = Vector2(self.position.x, self.position.y)
+        #if self.parent and type(self.parent) != str:
+            #position += self.parent.position
+            #self.instance._setup_container(self.parent.instance)
 
-        self.instance.set_position(position)
+        self.instance.set_position(self.position)
         self.instance.set_dimensions(self.size)
         self.instance.set_text(self.text)
 

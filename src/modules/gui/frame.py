@@ -33,6 +33,7 @@ class frame:
         'onHoverStart': 'none',
         'onHoverStop': 'none',
         'doubleClick': 'none',
+        'container': 'none',
     }
 
     misc = {
@@ -100,6 +101,7 @@ class frame:
         
         self.instance = pygame_gui.elements.UIPanel(relative_rect=self.rect, manager=uiService.uiManager, starting_layer_height=1,
         object_id=ObjectID(self.mid, '@button'))
+
         renderCycle.addTaskToRenderCycle(self.update, self.mid + '_update')
 
         self.mouseButton1Click = phxSignal()
