@@ -30,6 +30,8 @@ class textButton:
         'borderColorHover': '#FFFFFF',
         'borderColorDisabled': '#808080',
 
+        'zindex': 1,
+
         'mid': 'none',
         'instance': 'none',
 
@@ -37,9 +39,10 @@ class textButton:
         'onHoverStart': 'none',
         'onHoverStop': 'none',
         'doubleClick': 'none',
-    }
 
-    misc = {
+        'font': 'fasterOne',
+        'fontSize': 20,
+
         'shape': 'rounded_rectange', #rectangle, rounded_rectange, ellipse
         'cornerRadius': 10, #only for rounded_rectange
         'borderWidth': 2,
@@ -48,8 +51,17 @@ class textButton:
         'textAlignV': 'center', #top, center, bottom
     }
 
+    misc = {
+        'shape': 'rounded_rectange', #rectangle, rounded_rectange, ellipse
+        'shape_corner_radius': '20', #only for rounded_rectange
+        'border_width': '2',
+        'shadow_width': '2',
+        'text_horiz_alignment': 'center', #left, center, right
+        'text_vert_alignment': 'center', #top, center, bottom
+    }
+
     font = {
-        'name': 'montserrat',
+        'name': 'fasterOne',
         'size': 20,
     }
 
@@ -93,7 +105,16 @@ class textButton:
         if maps.colorNameConversion.get(index):
             self.properties[index] = value
             self.colors[maps.colorNameConversion[index]] = value
-            themeManager.modifyThemeColors(self.mid, self.colors)
+            themeManager.modifyTheme(self.mid, colorMap=self.colors)
+        elif maps.miscNameConversion.get(index):
+            value = str(value)
+            self.properties[index] = value
+            self.misc[maps.miscNameConversion[index]] = value
+            themeManager.modifyTheme(self.mid, miscMap=self.misc)
+        elif maps.fontNameConversion.get(index):
+            self.properties[index] = value
+            self.font[maps.fontNameConversion[index]] = value
+            themeManager.modifyTheme(self.mid, fontMap=self.font)
         elif self.properties.get(index):
             self.properties[index] = value
         elif self.heiarchy.get(index):
@@ -114,8 +135,8 @@ class textButton:
         self.mid = str(uuid.uuid4())
         
         self.instance = pygame_gui.elements.UIButton(relative_rect=self.rect, text=self.text, manager=uiService.uiManager, 
-        container=parent.instance,
-        starting_height=2,
+        #container=parent.instance,
+        #parent_element=parent.instance,
         object_id=ObjectID(self.mid, '@button'))
         renderCycle.addTaskToRenderCycle(self.update, self.mid + '_update')
 
@@ -139,17 +160,18 @@ class textButton:
         self.fix()
 
     def fix(self):
-        #position = Vector2(self.position.x, self.position.y)
-        #if self.parent and type(self.parent) != str:
-            #position += self.parent.position
-            #self.instance._setup_container(self.parent.instance)
+        position = Vector2(self.position.x, self.position.y)
+        if self.parent and type(self.parent) != str:
+            position += self.parent.position
+            self.instance._setup_container(self.parent.instance)
 
-        self.instance.set_position(self.position)
+        self.instance.set_position(position)
         self.instance.set_dimensions(self.size)
         self.instance.set_text(self.text)
 
     def setColors(self):
         self.instance.colours = self.colors
+
 
     def update(self, _dt, events):
 

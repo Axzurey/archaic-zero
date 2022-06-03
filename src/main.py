@@ -29,13 +29,23 @@ time.sleep(1)
 
 player = createEntity(pygame.Vector2(0, 0), pygame.Vector2(50, 50), 'src/images/player_top.png')
 
-frame1 = createFrame(pygame.Vector2(100, 100), pygame.Vector2(200, 200))
+frame1 = createFrame(pygame.Vector2(100, 100), pygame.Vector2(1000, 600))
 
-button1 = createButton(pygame.Vector2(3, 3), pygame.Vector2(150, 50), 'hello!', frame1)
+button1 = createButton(pygame.Vector2(120, 120), pygame.Vector2(150, 50), 'hello!', frame1)
 
 button1.mouseButton1Click.connect(lambda: print('button1 clicked'))
 
-button1.backgroundColor = "#00FFFF"
+button1.backgroundColor = "#45494e"
+
+button1.backgroundColorHover = "#00FFFF"
+
+button1.shape = 'rounded_rectangle'
+
+button1.cornerRadius = 5
+
+button1.borderWidth = 2
+
+button1.fontSize = 30
 
 #button1.position = pygame.Vector2(0, 0)
 

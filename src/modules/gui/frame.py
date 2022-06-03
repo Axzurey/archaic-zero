@@ -28,6 +28,7 @@ class frame:
 
         'mid': 'none',
         'instance': 'none',
+        'zindex': 0,
 
         'mouseButton1Click': 'none',
         'onHoverStart': 'none',
