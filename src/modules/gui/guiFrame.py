@@ -1,4 +1,3 @@
-import inspect
 import modules.maps as maps
 import uuid
 from pygame import Rect, Vector2
@@ -12,7 +11,7 @@ from modules.signal import phxSignal
 import client.renderCycle as renderCycle
 
 
-class frame:
+class guiFrame:
     
     properties = {
         'size': Vector2(100, 50),

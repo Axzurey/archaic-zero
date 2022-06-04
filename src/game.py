@@ -4,7 +4,7 @@ from pygame import Vector2
 import client.renderCycle as renderCycle
 from data.exposed import addEntity
 from modules.entity import entity
-from modules.gui.frame import frame
+from modules.gui.guiFrame import guiFrame
 from modules.gui.textLabel import textLabel
 from modules.gui.textButton import textButton
 
@@ -24,19 +24,19 @@ def createEntity(position: Vector2, size: Vector2, imagePath: str, walkLogicOver
 
     return ent
 
-def createFrame(position: Vector2, size: Vector2):
-    t = frame()
+def createFrame(position: Vector2, size: Vector2) -> guiFrame:
+    t = guiFrame()
     t.setPosition(position)
     t.setSize(size)
     return t
 
-def createButton(position: Vector2, size: Vector2, text: str, parent: frame = None):
+def createButton(position: Vector2, size: Vector2, text: str, parent: guiFrame = None) -> textButton:
     t = textButton(parent)
     t.setPosition(position)
     t.setSize(size)
     t.setText(text)
     return t
 
-def createLabel():
+def createLabel() -> textLabel:
     t = textLabel()
     return t

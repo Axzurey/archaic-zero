@@ -1,12 +1,12 @@
 {
     "defaults": {
         "colours": {
-            "normal_bg": "#45494e",
+            "normal_bg": "#BAD6FF",
             "hovered_bg": "#00FFFF",
             "disabled_bg": "#25292e",
             "selected_bg": "#193754",
             "dark_bg": "#15191e",
-            "normal_text": "#c5cbd8",
+            "normal_text": "#000000",
             "hovered_text": "#FFFFFF",
             "selected_text": "#FFFFFF",
             "disabled_text": "#6d736f",
@@ -32,21 +32,21 @@
         },
         "font": {
             "name": "fasterOne",
-            "size": 30,
+            "size": 25,
             "regular_resource": {
                 "package": "fonts",
                 "resource": "fasterOne.ttf"
             }
         }
     },
-    "2c62a2df-4dc0-499d-a465-4a3ef56dcc0f": {
+    "94368401-7df5-46e1-8111-e9b6a3588557": {
         "colours": {
-            "normal_bg": "#45494e",
+            "normal_bg": "#BAD6FF",
             "hovered_bg": "#00FFFF",
             "disabled_bg": "#25292e",
             "selected_bg": "#193754",
             "dark_bg": "#15191e",
-            "normal_text": "#c5cbd8",
+            "normal_text": "#000000",
             "hovered_text": "#FFFFFF",
             "selected_text": "#FFFFFF",
             "disabled_text": "#6d736f",
@@ -72,7 +72,7 @@
         },
         "font": {
             "name": "fasterOne",
-            "size": 30,
+            "size": 25,
             "regular_resource": {
                 "package": "fonts",
                 "resource": "fasterOne.ttf"
