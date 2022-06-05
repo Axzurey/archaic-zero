@@ -39,7 +39,127 @@
             }
         }
     },
-    "94368401-7df5-46e1-8111-e9b6a3588557": {
+    "99613b70-cccf-491f-b0b5-68adf7364267": {
+        "colours": {
+            "normal_bg": "#BAD6FF",
+            "hovered_bg": "#00FFFF",
+            "disabled_bg": "#25292e",
+            "selected_bg": "#193754",
+            "dark_bg": "#15191e",
+            "normal_text": "#000000",
+            "hovered_text": "#FFFFFF",
+            "selected_text": "#FFFFFF",
+            "disabled_text": "#6d736f",
+            "link_text": "#0000EE",
+            "link_hover": "#2020FF",
+            "link_selected": "#551A8B",
+            "text_shadow": "#777777",
+            "normal_border": "#DDDDDD",
+            "hovered_border": "#B0B0B0",
+            "disabled_border": "#808080",
+            "selected_border": "#8080B0",
+            "active_border": "#8080B0",
+            "filled_bar": "#f4251b",
+            "unfilled_bar": "#CCCCCC"
+        },
+        "misc": {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "5",
+            "border_width": "2",
+            "shadow_width": "2",
+            "text_horiz_alignment": "center",
+            "text_vert_alignment": "center"
+        },
+        "font": {
+            "name": "fasterOne",
+            "size": 25,
+            "regular_resource": {
+                "package": "fonts",
+                "resource": "fasterOne.ttf"
+            }
+        }
+    },
+    "e52a1651-6635-4e2a-ac6d-03e09cea45fb": {
+        "colours": {
+            "normal_bg": "#BAD6FF",
+            "hovered_bg": "#00FFFF",
+            "disabled_bg": "#25292e",
+            "selected_bg": "#193754",
+            "dark_bg": "#15191e",
+            "normal_text": "#000000",
+            "hovered_text": "#FFFFFF",
+            "selected_text": "#FFFFFF",
+            "disabled_text": "#6d736f",
+            "link_text": "#0000EE",
+            "link_hover": "#2020FF",
+            "link_selected": "#551A8B",
+            "text_shadow": "#777777",
+            "normal_border": "#DDDDDD",
+            "hovered_border": "#B0B0B0",
+            "disabled_border": "#808080",
+            "selected_border": "#8080B0",
+            "active_border": "#8080B0",
+            "filled_bar": "#f4251b",
+            "unfilled_bar": "#CCCCCC"
+        },
+        "misc": {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "5",
+            "border_width": "2",
+            "shadow_width": "2",
+            "text_horiz_alignment": "center",
+            "text_vert_alignment": "center"
+        },
+        "font": {
+            "name": "fasterOne",
+            "size": 25,
+            "regular_resource": {
+                "package": "fonts",
+                "resource": "fasterOne.ttf"
+            }
+        }
+    },
+    "b6bcd396-e86c-427e-814f-915dc0ffd7ea": {
+        "colours": {
+            "normal_bg": "#BAD6FF",
+            "hovered_bg": "#00FFFF",
+            "disabled_bg": "#25292e",
+            "selected_bg": "#193754",
+            "dark_bg": "#15191e",
+            "normal_text": "#000000",
+            "hovered_text": "#FFFFFF",
+            "selected_text": "#FFFFFF",
+            "disabled_text": "#6d736f",
+            "link_text": "#0000EE",
+            "link_hover": "#2020FF",
+            "link_selected": "#551A8B",
+            "text_shadow": "#777777",
+            "normal_border": "#DDDDDD",
+            "hovered_border": "#B0B0B0",
+            "disabled_border": "#808080",
+            "selected_border": "#8080B0",
+            "active_border": "#8080B0",
+            "filled_bar": "#f4251b",
+            "unfilled_bar": "#CCCCCC"
+        },
+        "misc": {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "5",
+            "border_width": "2",
+            "shadow_width": "2",
+            "text_horiz_alignment": "center",
+            "text_vert_alignment": "center"
+        },
+        "font": {
+            "name": "fasterOne",
+            "size": 25,
+            "regular_resource": {
+                "package": "fonts",
+                "resource": "fasterOne.ttf"
+            }
+        }
+    },
+    "17c279ae-5176-4eb9-ab4d-742f79ec3a78": {
         "colours": {
             "normal_bg": "#BAD6FF",
             "hovered_bg": "#00FFFF",

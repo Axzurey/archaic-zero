@@ -1,5 +1,18 @@
 import threading
 
+from pygame import Vector2
+
+def fromUdim(offsetX: float = 0, scaleX: float = 0, offsetY: float = 0, scaleY: float = 0):
+    def calculate(max: Vector2):
+        maxX = max.x
+        maxY = max.y
+
+        return Vector2(maxX * scaleX + offsetX, maxY * scaleY + offsetY)
+
+    return {
+        "calculate": calculate
+    }
+
 def switchParent(c, p):
     print('switch start', c, p)
     px = c.parent
@@ -8,7 +21,8 @@ def switchParent(c, p):
         raise Exception('Cannot set parent to self')
 
     if px and type(px) != str:
-        px.children.remove(c)
+        if px.children.count(c) > 0:
+            px.children.remove(c)
     
     p.heiarchy['children'].append(c)
     c.heiarchy['parent'] = p
