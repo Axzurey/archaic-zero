@@ -3,42 +3,32 @@ import pygame
 import client.renderCycle as renderCycle
 from game import  createButton, createEntity, createFrame
 from modules.quark import fromUdim
+from modules.udim2 import udim2
 
 def createAttackMenu():
-    screenX, screenY = renderCycle.getScreen().get_size()
 
-    mainsizeX, mainsizeY = screenX * .33, screenY * .25
+    attackBar = createFrame(udim2.fromOffset(0, 0), udim2.fromScale(.7, .5))
 
-    mainpositionX, mainpositionY = screenX * .67, screenY * .75
+    attack1 = createButton(udim2.fromScale(.1, .2), udim2.fromScale(.5, .5), 'HELLO WORLD!', attackBar)
 
-    attackBar = createFrame(pygame.Vector2(mainpositionX, mainpositionY), pygame.Vector2(mainsizeX, mainsizeY))
+    attack1.backgroundColor = '#BAD6FF'
 
-    for x in range(1, 3):
-        for y in range(1, 3):
-            udSize = fromUdim(scaleX=.4, scaleY=.2)
-            calcSize = udSize["calculate"](attackBar.size)
+    attack1.textColor = '#000000'
 
-            udPos = fromUdim(scaleX=.25 * x, scaleY=.25 * y)
-            calcPos = udPos["calculate"](attackBar.position - attackBar.size)
+    attack1.backgroundColorHover = "#00FFFF"
 
-            print(calcSize, calcPos)
+    attack1.shape = 'rounded_rectangle'
 
-            attack1 = createButton(calcPos, calcSize, f'Attack {x + y}', attackBar)
+    attack1.cornerRadius = 5
 
-            attack1.backgroundColor = '#BAD6FF'
+    attack1.borderWidth = 2
 
-            attack1.textColor = '#000000'
+    attack1.fontSize = 15
 
-            attack1.backgroundColorHover = "#00FFFF"
+    print('FINE', attack1.parent, attackBar.parent, attack1.children, attackBar.children)
+    #<modules.gui.guiFrame.guiFrame object at 0x000001CC81CCFB50> <modules.gui.guiFrame.guiFrame object at 0x000001CC81CCFB50> 
+    # [<modules.gui.textButton.textButton object at 0x000001CC81D11300>] [<modules.gui.textButton.textButton object at 0x000001CC81D11300>]
 
-            attack1.shape = 'rounded_rectangle'
-
-            attack1.cornerRadius = 5
-
-            attack1.borderWidth = 2
-
-            attack1.fontSize = 25
-
-    
+    #this is wrong. fix whatever is happening!
 
     

@@ -7,6 +7,7 @@ from modules.entity import entity
 from modules.gui.guiFrame import guiFrame
 from modules.gui.textLabel import textLabel
 from modules.gui.textButton import textButton
+from modules.udim2 import udim2
 
 entities: dict[str, entity] = {}
 
@@ -24,16 +25,16 @@ def createEntity(position: Vector2, size: Vector2, imagePath: str, walkLogicOver
 
     return ent
 
-def createFrame(position: Vector2, size: Vector2) -> guiFrame:
+def createFrame(position: udim2, size: udim2) -> guiFrame:
     t = guiFrame()
-    t.setPosition(position)
-    t.setSize(size)
+    t.position = position
+    t.size = size
     return t
 
-def createButton(position: Vector2, size: Vector2, text: str, parent: guiFrame = None) -> textButton:
+def createButton(position: udim2, size: udim2, text: str, parent: guiFrame = None) -> textButton:
     t = textButton(parent)
-    t.setPosition(position)
-    t.setSize(size)
+    t.position = position
+    t.size = size
     t.setText(text)
     return t
 
