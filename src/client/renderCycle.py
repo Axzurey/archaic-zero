@@ -3,7 +3,7 @@ import threading
 import time
 import pygame
 from typing import Callable
-from modules.quark import createThread
+from circ.thrd import createThread
 
 _tasks: dict[str, Callable[[None], None]] = {}
 
@@ -30,12 +30,17 @@ def removeTaskFromRenderCycle(mid: str) -> None:
 
 clientClosing = False
 lastUpdate = 0
+
+r = 0
 def _renderCycle() -> None:
     clock = pygame.time.Clock()
 
     global clientClosing
     
     while (not clientClosing):
+        global r
+        r += 1
+        print(f'run {r}')
 
         clock.tick(localEnv['renderFPS'])
 
@@ -50,7 +55,6 @@ def _renderCycle() -> None:
         for ev in events:
             if ev.type == pygame.QUIT:
                 clientClosing = True
-
 
         for i in list(_tasks):
             task = _tasks[i]

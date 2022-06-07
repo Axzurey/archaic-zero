@@ -9,11 +9,7 @@ class textButton(baseGui):
 
         instance = pygame_gui.elements.UIButton(relative_rect=self.rect, manager=uiService.uiManager, text=self.text,
         object_id=ObjectID(self.mid, '@button'))
-
-        super().subLoad(instance)
-
-        if parent:
-            self.parent = parent
+        super().subLoad(instance, parent)
 
     def setText(self, text: str):
         self.text = text

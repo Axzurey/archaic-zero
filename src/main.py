@@ -4,7 +4,8 @@ import client.renderCycle as renderCycle
 import client.uiService as uiService
 from components.attackMenu import createAttackMenu
 from game import createButton, createEntity, createFrame
-from modules.quark import createThread
+from modules.gui.baseGui import baseGui
+from circ.thrd import createThread
 from modules.themeManager import loadDefaultTheme
 
 pygame.init()

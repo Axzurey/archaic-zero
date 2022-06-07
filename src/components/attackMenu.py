@@ -2,14 +2,16 @@ from struct import calcsize
 import pygame
 import client.renderCycle as renderCycle
 from game import  createButton, createEntity, createFrame
-from modules.quark import fromUdim
 from modules.udim2 import udim2
+from worldClass import worldRoot
 
 def createAttackMenu():
 
-    attackBar = createFrame(udim2.fromOffset(0, 0), udim2.fromScale(.7, .5))
+    attackBar = createFrame(udim2.fromOffset(0, 0), udim2.fromScale(.7, .5), worldRoot)
 
-    attack1 = createButton(udim2.fromScale(.1, .2), udim2.fromScale(.5, .5), 'HELLO WORLD!', attackBar)
+    attackBar.backgroundColor = '#00FFFF' #NOT WORKING!
+
+    attack1 = createButton(udim2.fromScale(0, 0), udim2.fromScale(.5, .5), 'HELLO WORLD!', attackBar)
 
     attack1.backgroundColor = '#BAD6FF'
 
@@ -17,18 +19,21 @@ def createAttackMenu():
 
     attack1.backgroundColorHover = "#00FFFF"
 
+    attack1.font = 'fasterOne'
+
     attack1.shape = 'rounded_rectangle'
 
     attack1.cornerRadius = 5
 
     attack1.borderWidth = 2
 
-    attack1.fontSize = 15
+    attack1.fontSize = 25
 
-    print('FINE', attack1.parent, attackBar.parent, attack1.children, attackBar.children)
-    #<modules.gui.guiFrame.guiFrame object at 0x000001CC81CCFB50> <modules.gui.guiFrame.guiFrame object at 0x000001CC81CCFB50> 
-    # [<modules.gui.textButton.textButton object at 0x000001CC81D11300>] [<modules.gui.textButton.textButton object at 0x000001CC81D11300>]
+    attack1.text = 'THIS IS MY ATTACK!'
 
-    #this is wrong. fix whatever is happening!
+   # print(attackBar.parent, attackBar.children)
 
+   # print(attack1.parent, attack1.children)
+
+   # print(worldRoot.children)
     

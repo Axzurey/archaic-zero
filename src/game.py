@@ -25,8 +25,8 @@ def createEntity(position: Vector2, size: Vector2, imagePath: str, walkLogicOver
 
     return ent
 
-def createFrame(position: udim2, size: udim2) -> guiFrame:
-    t = guiFrame()
+def createFrame(position: udim2, size: udim2, parent) -> guiFrame:
+    t = guiFrame(parent)
     t.position = position
     t.size = size
     return t
