@@ -3,9 +3,8 @@ import pygame
 import client.renderCycle as renderCycle
 import client.uiService as uiService
 from components.attackMenu import createAttackMenu
-from game import createButton, createEntity, createFrame
-from modules.gui.baseGui import baseGui
-from circ.thrd import createThread
+from definedWorld import loadWorld
+from game import createEntity
 from modules.themeManager import loadDefaultTheme
 
 pygame.init()
@@ -29,7 +28,11 @@ renderCycle.addTaskToRenderCycle(updateScreen, '_mainUpdate')
 
 time.sleep(1)
 
-player = createEntity(pygame.Vector2(0, 0), pygame.Vector2(50, 50), 'src/images/player_top.png')
+loadWorld()
+
+player = createEntity(pygame.Vector2(0, 0), pygame.Vector2(25, 25), 'src/images/player_top.png')
+
+player.speed = 80
 
 createAttackMenu()
 

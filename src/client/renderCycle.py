@@ -9,7 +9,7 @@ _tasks: dict[str, Callable[[None], None]] = {}
 
 localEnv = {
     "renderFPS": 60,
-    "displayResolution": (1366, 768),
+    "displayResolution": (1500, 800),
 }
 
 _screen: pygame.Surface = None
@@ -31,16 +31,12 @@ def removeTaskFromRenderCycle(mid: str) -> None:
 clientClosing = False
 lastUpdate = 0
 
-r = 0
 def _renderCycle() -> None:
     clock = pygame.time.Clock()
 
     global clientClosing
     
     while (not clientClosing):
-        global r
-        r += 1
-        print(f'run {r}')
 
         clock.tick(localEnv['renderFPS'])
 

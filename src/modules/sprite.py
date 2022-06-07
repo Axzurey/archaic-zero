@@ -17,6 +17,8 @@ class sprite:
         self.velocity = pygame.Vector2(0, 0)
         self.acceleration = pygame.Vector2(0, 0)
 
+        self.ignoreCollisionsWith = []
+
         renderCycle.addTaskToRenderCycle(self.draw, self.id)
 
     def checkCollision(self, other: any):
@@ -24,6 +26,17 @@ class sprite:
 
     def checkNextCollision(self, nextPos, other: any):
         return pygame.Rect(nextPos, self.size).colliderect(other.rect)
+
+    def getPartial(self, nextPos, other):
+        if pygame.Rect(pygame.Vector2(self.position.x, nextPos.y), self.size).colliderect(other.rect) and pygame.Rect(pygame.Vector2(nextPos.x, self.position.y), self.size).colliderect(other.rect):
+            return None
+        else:
+            if pygame.Rect(pygame.Vector2(nextPos.x, self.position.y), self.size).colliderect(other.rect):
+                return pygame.Vector2(self.position.x, nextPos.y)
+            elif pygame.Rect(pygame.Vector2(self.position.x, nextPos.y), self.size).colliderect(other.rect):
+                return pygame.Vector2(nextPos.x, self.position.y)
+            else:
+                return nextPos
 
     def setVelocity(self, v: pygame.Vector2) -> None:
         self.velocity = v
@@ -41,18 +54,32 @@ class sprite:
 
         p = True
 
+        closestOne = None
+
         for x in list(entities):
             e = entities[x]
-            if e.sprite == self:
+            if e.sprite == self or self.ignoreCollisionsWith.count(e) > 0:
                 continue
             if self.checkNextCollision(target, e.sprite):
-                p = False
-                break
+                z = self.getPartial(target, e.sprite)
 
+                if not z:
+
+                    break #will collide, just ignore
+
+                p = False
+                """
+                if closestOne:
+                    if (z - target).magnitude() < (closestOne - target).magnitude():
+                        closestOne = z
+                else:
+                    closestOne = z"""
         if p:
             self.position = target
-            self.rect = pygame.Rect(self.position, self.size)
-
+        elif closestOne:
+            self.position = closestOne
+            
+        self.rect = pygame.Rect(self.position, self.size)
         renderCycle.getScreen().blit(self.image, self.rect)
 
     def delete(self):

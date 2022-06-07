@@ -7,6 +7,8 @@ from worldClass import worldRoot
 
 def createAttackMenu():
 
+    return
+
     attackBar = createFrame(udim2.fromOffset(0, 0), udim2.fromScale(.7, .5), worldRoot)
 
     attackBar.backgroundColor = '#00FFFF' #NOT WORKING!
