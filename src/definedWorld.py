@@ -2,6 +2,7 @@ import random
 import pygame
 import client.renderCycle as renderCycle
 from game import createSprite
+import game
 
 resolution = renderCycle.localEnv["displayResolution"]
 
@@ -38,5 +39,6 @@ def loadWorld():
             if col == 1:
                 e = createSprite(pygame.Vector2(x * 50, y * 50), pygame.Vector2(50, 50), 'src/images/grass.png')
                 walls.append(e)
+                game.spriteGroups["worldModel"].add(e)
             x += 1
         y += 1

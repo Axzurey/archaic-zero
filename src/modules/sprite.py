@@ -3,8 +3,11 @@ import uuid
 import client.renderCycle as renderCycle
 from data.exposed import getSprites
 
-class sprite:
+class sprite(pygame.sprite.Sprite):
     def __init__(self, position: tuple[int, int], size: tuple[int, int], image: str):
+
+        super().__init__()
+
         self.rect = pygame.Rect(position, size)
         self.size = size
         
@@ -19,68 +22,68 @@ class sprite:
 
         self.ignoreCollisionsWith = []
 
-        renderCycle.addTaskToRenderCycle(self.draw, self.id)
-
-    def checkCollision(self, other: any):
-        return self.rect.colliderect(other.rect)
-
-    def checkNextCollision(self, nextPos, other: any):
-        return pygame.Rect(nextPos, self.size).colliderect(other.rect)
-
-    def getPartial(self, nextPos, other):
-        if pygame.Rect(pygame.Vector2(self.position.x, nextPos.y), self.size).colliderect(other.rect) and pygame.Rect(pygame.Vector2(nextPos.x, self.position.y), self.size).colliderect(other.rect):
-            return None
-        else:
-            if pygame.Rect(pygame.Vector2(nextPos.x, self.position.y), self.size).colliderect(other.rect):
-                return pygame.Vector2(self.position.x, nextPos.y)
-            elif pygame.Rect(pygame.Vector2(self.position.x, nextPos.y), self.size).colliderect(other.rect):
-                return pygame.Vector2(nextPos.x, self.position.y)
-            else:
-                return nextPos
-
     def setVelocity(self, v: pygame.Vector2) -> None:
         self.velocity = v
 
     def setAcceleration(self, a: pygame.Vector2):
         self.acceleration = a
 
-    def draw(self, dt: float):
-        
-        target = self.position + (self.velocity + self.acceleration) * dt
+
+    def draw(self):
+        print('drawing', self.rect)
+        renderCycle.getScreen().blit(self.image, self.rect)
+
+    def getRectPoints(self):
+        return (pygame.Vector2(self.rect.topleft), pygame.Vector2(self.rect.topright), pygame.Vector2(self.rect.bottomleft), pygame.Vector2(self.rect.bottomright))
+
+    def checkCollision(self, targetPos: pygame.Vector2, other):
+        if pygame.Rect(targetPos, self.size).colliderect(other.rect):
+            points0 = self.getRectPoints()
+            points1 = other.getRectPoints()
+
+            closestPointsDistance = None
+            for point0 in points0:
+                for point1 in points1:
+                    distance = (point0 - point1).magnitude()
+
+                    if closestPointsDistance == None or distance < closestPointsDistance:
+                        closestPointsDistance = distance
+
+            if closestPointsDistance > 1:
+                return closestPointsDistance
+
+            return -1
+        return 0
+
+    def update(self, allSpriteGroups: dict[str, pygame.sprite.Group]):
+
+        target = self.position + (self.velocity + self.acceleration)
 
         self.acceleration = pygame.Vector2(0, 0)
 
-        entities = getSprites()
+        doesPass = True
 
-        p = True
+        for group in allSpriteGroups.values():
+            for sprite in group:
+                if sprite.id in self.ignoreCollisionsWith or sprite == self:
+                    continue
 
-        closestOne = None
+                check = self.checkCollision(target, sprite)
+                if check == -1:
+                    doesPass = False
+                    break
+                elif check != 0:
+                    dst = self.position - target ##TODO: fix this
 
-        for x in list(entities):
-            e = entities[x]
-            if e == self or self.ignoreCollisionsWith.count(e) > 0:
-                continue
-            if self.checkNextCollision(target, e):
-                z = self.getPartial(target, e)
+                    target = self.position - dst * check
+            if not doesPass:
+                break
 
-                if not z:
-
-                    break #will collide, just ignore
-
-                p = False
-                """
-                if closestOne:
-                    if (z - target).magnitude() < (closestOne - target).magnitude():
-                        closestOne = z
-                else:
-                    closestOne = z"""
-        if p:
+        if doesPass:
             self.position = target
-        elif closestOne:
-            self.position = closestOne
-            
-        self.rect = pygame.Rect(self.position, self.size)
-        renderCycle.getScreen().blit(self.image, self.rect)
+            self.rect = pygame.Rect(self.position, self.size)
+
+        pygame.sprite.Sprite.update(self)
 
     def delete(self):
         renderCycle.removeTaskFromRenderCycle(self.id)
