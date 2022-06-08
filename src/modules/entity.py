@@ -33,4 +33,7 @@ class entity:
             y += 1
 
         self.sprite.setAcceleration(pygame.Vector2(x, y) * self.speed)
+
+        self.sprite.speed = self.speed
+
         self.sprite.draw(_dt)

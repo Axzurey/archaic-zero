@@ -1,7 +1,7 @@
 import pygame
 import uuid
 import client.renderCycle as renderCycle
-from data.exposed import getEntities
+from data.exposed import getSprites
 
 class sprite:
     def __init__(self, position: tuple[int, int], size: tuple[int, int], image: str):
@@ -48,9 +48,9 @@ class sprite:
         
         target = self.position + (self.velocity + self.acceleration) * dt
 
-        self.acceleration = pygame.Vector2()
+        self.acceleration = pygame.Vector2(0, 0)
 
-        entities = getEntities()
+        entities = getSprites()
 
         p = True
 
@@ -58,10 +58,10 @@ class sprite:
 
         for x in list(entities):
             e = entities[x]
-            if e.sprite == self or self.ignoreCollisionsWith.count(e) > 0:
+            if e == self or self.ignoreCollisionsWith.count(e) > 0:
                 continue
-            if self.checkNextCollision(target, e.sprite):
-                z = self.getPartial(target, e.sprite)
+            if self.checkNextCollision(target, e):
+                z = self.getPartial(target, e)
 
                 if not z:
 

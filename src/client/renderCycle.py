@@ -52,9 +52,9 @@ def _renderCycle() -> None:
             if ev.type == pygame.QUIT:
                 clientClosing = True
 
+
         for i in list(_tasks):
             task = _tasks[i]
-
             p = inspect.signature(task).parameters
             p = p.keys()
             if len(p) == 0:

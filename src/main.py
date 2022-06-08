@@ -30,9 +30,9 @@ time.sleep(1)
 
 loadWorld()
 
-player = createEntity(pygame.Vector2(0, 0), pygame.Vector2(25, 25), 'src/images/player_top.png')
+player = createEntity(pygame.Vector2(0, 0), pygame.Vector2(50, 50), 'src/images/player_top.png')
 
-player.speed = 80
+player.speed = 120
 
 createAttackMenu()
 
