@@ -47,7 +47,7 @@ def drawAllSpriteGroups():
 
     lastupd = time.time()
 
-    worldRoot.update(time.time() - lastupd, renderCycle.lastEvents)
+    worldRoot.update(time.time() - lastupd, renderCycle.lastEvents) #cause of jitters
 
     pygame.display.flip()
 
