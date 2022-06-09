@@ -285,7 +285,7 @@ class baseGui:
     def setColors(self):
         self.instance.colours = self.colors
 
-    def update(self, _dt, events):
+    def update(self, dt, events):
 
         createThread(self.fix)
 
@@ -299,4 +299,4 @@ class baseGui:
                     self.onHoverStart.emit()
 
         for child in self.children:
-            createThread(child.update, _dt, events)
+            createThread(child.update, dt, events)

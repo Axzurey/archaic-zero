@@ -1,7 +1,7 @@
-from ast import arg
-import threading
+import time
 from pygame import Vector2
 import pygame
+from circ.thrd import createThread
 import client.renderCycle as renderCycle
 from data.exposed import addEntity, addSprite
 from modules.entity import entity
@@ -11,6 +11,8 @@ from modules.gui.textButton import textButton
 from modules.models.playerEntity import playerEntity
 from modules.sprite import sprite
 from modules.udim2 import udim2
+from worldClass import worldRoot
+import client.uiService as uiService
 
 spriteGroups = {
     'worldModel': pygame.sprite.Group(),
@@ -18,11 +20,19 @@ spriteGroups = {
     'otherEntities': pygame.sprite.Group()
 }
 
+updatableUI = {
+
+}
+
 entities: dict[str, entity] = {}
 
 sprites: dict[str, sprite] = {}
 
+lastupd = time.time()
+
 def drawAllSpriteGroups():
+
+    global lastupd
 
     for v in spriteGroups.values():
         v.update(spriteGroups)
@@ -34,6 +44,12 @@ def drawAllSpriteGroups():
 
     for v in spriteGroups.values():
         v.draw(renderCycle.getScreen())
+
+    lastupd = time.time()
+
+    worldRoot.update(time.time() - lastupd, renderCycle.lastEvents)
+
+    pygame.display.flip()
 
 renderCycle.addTaskToRenderCycle(drawAllSpriteGroups, 'process:drawAllSpriteGroups')
 
@@ -74,6 +90,8 @@ def createFrame(position: udim2, size: udim2, parent) -> guiFrame:
     t = guiFrame(parent)
     t.position = position
     t.size = size
+
+    updatableUI[t.mid] = t
     return t
 
 def createButton(position: udim2, size: udim2, text: str, parent: guiFrame = None) -> textButton:
@@ -81,6 +99,8 @@ def createButton(position: udim2, size: udim2, text: str, parent: guiFrame = Non
     t.position = position
     t.size = size
     t.setText(text)
+
+    updatableUI[t.mid] = t
     return t
 
 def createLabel() -> textLabel:

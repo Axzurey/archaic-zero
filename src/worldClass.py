@@ -12,5 +12,3 @@ class worldClass:
             createThread(child.update, dt, events)
 
 worldRoot = worldClass()
-
-renderCycle.addTaskToRenderCycle(worldRoot.update, '_worldUpdate@ONCE')

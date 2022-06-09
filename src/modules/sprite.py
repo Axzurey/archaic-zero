@@ -1,7 +1,6 @@
 import pygame
 import uuid
 import client.renderCycle as renderCycle
-from data.exposed import getSprites
 
 class sprite(pygame.sprite.Sprite):
     def __init__(self, position: tuple[int, int], size: tuple[int, int], image: str):
@@ -36,24 +35,8 @@ class sprite(pygame.sprite.Sprite):
     def getRectPoints(self):
         return (pygame.Vector2(self.rect.topleft), pygame.Vector2(self.rect.topright), pygame.Vector2(self.rect.bottomleft), pygame.Vector2(self.rect.bottomright))
 
-    def checkCollision(self, targetPos: pygame.Vector2, other):
-        if pygame.Rect(targetPos, self.size).colliderect(other.rect):
-            points0 = self.getRectPoints()
-            points1 = other.getRectPoints()
-
-            closestPointsDistance = None
-            for point0 in points0:
-                for point1 in points1:
-                    distance = (point0 - point1).magnitude()
-
-                    if closestPointsDistance == None or distance < closestPointsDistance:
-                        closestPointsDistance = distance
-
-            if closestPointsDistance > 1:
-                return closestPointsDistance
-
-            return -1
-        return 0
+    def checkCollision(self, nextP: pygame.Vector2, s1):
+        return pygame.Rect(nextP, self.size).colliderect(s1.rect)
 
     def update(self, allSpriteGroups: dict[str, pygame.sprite.Group]):
 
@@ -69,13 +52,8 @@ class sprite(pygame.sprite.Sprite):
                     continue
 
                 check = self.checkCollision(target, sprite)
-                if check == -1:
+                if check:
                     doesPass = False
-                    break
-                elif check != 0:
-                    dst = self.position - target ##TODO: fix this
-
-                    target = self.position - dst * check
             if not doesPass:
                 break
 

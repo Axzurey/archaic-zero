@@ -23,7 +23,7 @@ class textLabel:
         self.mid = str(uuid.uuid4())
         
         self.instance = pygame_gui.elements.UILabel(relative_rect=self.rect, text=self.text, manager=uiService.uiManager, object_id=self.mid)
-        renderCycle.addTaskToRenderCycle(self.update, self.mid + '_update')
+        #renderCycle.addTaskToRenderCycle(self.update, self.mid + '_update')
 
         self.onHoverStart = phxSignal()
         self.onHoverStop = phxSignal()

@@ -13,7 +13,7 @@ loadDefaultTheme()
 
 res = renderCycle.localEnv['displayResolution']
 
-screen = pygame.display.set_mode(res)
+screen = pygame.display.set_mode(res, pygame.DOUBLEBUF)
 
 renderCycle.setScreen(screen)
 

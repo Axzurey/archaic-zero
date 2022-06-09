@@ -31,14 +31,14 @@ def removeTaskFromRenderCycle(mid: str) -> None:
 clientClosing = False
 lastUpdate = 0
 
+lastEvents = []
+
 def _renderCycle() -> None:
     clock = pygame.time.Clock()
 
     global clientClosing
     
     while (not clientClosing):
-
-        clock.tick(localEnv['renderFPS'])
 
         global lastUpdate
 
@@ -47,6 +47,8 @@ def _renderCycle() -> None:
         lastUpdate = now
 
         events = pygame.event.get()
+
+        lastEvents = events
 
         for ev in events:
             if ev.type == pygame.QUIT:
@@ -65,7 +67,9 @@ def _renderCycle() -> None:
                 createThread(task, dt, events)
             else:
                 print('invalid args:', p)
-        pygame.display.flip()
+        #pygame.display.flip()
+
+        clock.tick(localEnv['renderFPS'])
 
 
 cycleStarted = False
