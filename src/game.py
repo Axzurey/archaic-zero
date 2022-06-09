@@ -6,13 +6,11 @@ import client.renderCycle as renderCycle
 from data.exposed import addEntity, addSprite
 from modules.entity import entity
 from modules.gui.guiFrame import guiFrame
-from modules.gui.textLabel import textLabel
 from modules.gui.textButton import textButton
 from modules.models.playerEntity import playerEntity
 from modules.sprite import sprite
 from modules.udim2 import udim2
 from worldClass import worldRoot
-import client.uiService as uiService
 
 spriteGroups = {
     'worldModel': pygame.sprite.Group(),
@@ -34,22 +32,41 @@ def drawAllSpriteGroups():
 
     global lastupd
 
+    dt = time.time() - lastupd
+
+    t = time.time()
+
+    t1 = time.time()
+
     for v in spriteGroups.values():
         v.update(spriteGroups)
+
+    print('sprite groups:', time.time() - t1)
 
     screenCol = (255, 0, 255)
     screen = renderCycle.getScreen()
 
     screen.fill(screenCol)
 
+    t2 = time.time()
+
     for v in spriteGroups.values():
         v.draw(renderCycle.getScreen())
 
+    print('sprite draw: ', time.time() - t2)
+
+
+    t3 = time.time()
+
+    worldRoot.update(dt, renderCycle.lastEvents)
+
+    print('world update: ', time.time() - t3)
+
     lastupd = time.time()
 
-    worldRoot.update(time.time() - lastupd, renderCycle.lastEvents) #cause of jitters
+    pygame.display.update()
 
-    pygame.display.flip()
+    print('updated after: ', time.time() - t)
 
 renderCycle.addTaskToRenderCycle(drawAllSpriteGroups, 'process:drawAllSpriteGroups')
 
@@ -101,8 +118,4 @@ def createButton(position: udim2, size: udim2, text: str, parent: guiFrame = Non
     t.setText(text)
 
     updatableUI[t.mid] = t
-    return t
-
-def createLabel() -> textLabel:
-    t = textLabel()
     return t

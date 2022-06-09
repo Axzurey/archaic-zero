@@ -1,47 +1,7 @@
 {
     "defaults": {
         "colours": {
-            "normal_bg": "#BAD6FF",
-            "hovered_bg": "#00FFFF",
-            "disabled_bg": "#25292e",
-            "selected_bg": "#193754",
-            "dark_bg": "#15191e",
-            "normal_text": "#000000",
-            "hovered_text": "#FFFFFF",
-            "selected_text": "#FFFFFF",
-            "disabled_text": "#6d736f",
-            "link_text": "#0000EE",
-            "link_hover": "#2020FF",
-            "link_selected": "#551A8B",
-            "text_shadow": "#777777",
-            "normal_border": "#DDDDDD",
-            "hovered_border": "#B0B0B0",
-            "disabled_border": "#808080",
-            "selected_border": "#8080B0",
-            "active_border": "#8080B0",
-            "filled_bar": "#f4251b",
-            "unfilled_bar": "#CCCCCC"
-        },
-        "misc": {
-            "shape": "rounded_rectangle",
-            "shape_corner_radius": "5",
-            "border_width": "2",
-            "shadow_width": "2",
-            "text_horiz_alignment": "center",
-            "text_vert_alignment": "center"
-        },
-        "font": {
-            "name": "fasterOne",
-            "size": 25,
-            "regular_resource": {
-                "package": "fonts",
-                "resource": "fasterOne.ttf"
-            }
-        }
-    },
-    "3d30ffaa-ef65-49b2-8f3e-854ae3d73861": {
-        "colours": {
-            "normal_bg": "#00FFFF",
+            "normal_bg": "#45494e",
             "hovered_bg": "#35393e",
             "disabled_bg": "#25292e",
             "selected_bg": "#193754",
@@ -66,46 +26,6 @@
         "font": {
             "name": "fasterOne",
             "size": 20,
-            "regular_resource": {
-                "package": "fonts",
-                "resource": "fasterOne.ttf"
-            }
-        }
-    },
-    "814c50fe-2f1a-478a-82d9-4e7cfebec946": {
-        "colours": {
-            "normal_bg": "#BAD6FF",
-            "hovered_bg": "#00FFFF",
-            "disabled_bg": "#25292e",
-            "selected_bg": "#193754",
-            "dark_bg": "#15191e",
-            "normal_text": "#000000",
-            "hovered_text": "#FFFFFF",
-            "selected_text": "#FFFFFF",
-            "disabled_text": "#6d736f",
-            "link_text": "#0000EE",
-            "link_hover": "#2020FF",
-            "link_selected": "#551A8B",
-            "text_shadow": "#777777",
-            "normal_border": "#DDDDDD",
-            "hovered_border": "#B0B0B0",
-            "disabled_border": "#808080",
-            "selected_border": "#8080B0",
-            "active_border": "#8080B0",
-            "filled_bar": "#f4251b",
-            "unfilled_bar": "#CCCCCC"
-        },
-        "misc": {
-            "shape": "rounded_rectangle",
-            "shape_corner_radius": "5",
-            "border_width": "2",
-            "shadow_width": "2",
-            "text_horiz_alignment": "center",
-            "text_vert_alignment": "center"
-        },
-        "font": {
-            "name": "fasterOne",
-            "size": 25,
             "regular_resource": {
                 "package": "fonts",
                 "resource": "fasterOne.ttf"

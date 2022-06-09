@@ -1,5 +1,4 @@
 import inspect
-import threading
 import time
 import pygame
 from typing import Callable
@@ -60,11 +59,11 @@ def _renderCycle() -> None:
             p = inspect.signature(task).parameters
             p = p.keys()
             if len(p) == 0:
-                createThread(task)
+                task()
             elif len(p) == 1:
-                createThread(task, dt)
+                task(dt)
             elif len(p) == 2:
-                createThread(task, dt, events)
+                task(dt, events)
             else:
                 print('invalid args:', p)
         #pygame.display.flip()

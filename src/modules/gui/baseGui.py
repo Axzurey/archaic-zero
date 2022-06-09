@@ -1,11 +1,11 @@
+import pygame
 import modules.maps as maps
 import uuid
 from pygame import Rect, Vector2
-import pygame_gui
 from modules.quark import switchParent
 from circ.thrd import createThread
-import modules.themeManager as themeManager
 import modules.mathf as mathf
+import gameConstants
 
 from modules.signal import phxSignal
 import client.renderCycle as renderCycle
@@ -115,20 +115,7 @@ class baseGui:
             return super().__getattribute__(index)
 
     def __setattr__(self, index, value):
-        if maps.colorNameConversion.get(index) is not None:
-            self.properties[index] = value
-            self.colors[maps.colorNameConversion[index]] = value
-            themeManager.modifyTheme(self.mid, colorMap=self.colors)
-        elif maps.miscNameConversion.get(index) is not None:
-            value = str(value)
-            self.properties[index] = value
-            self.misc[maps.miscNameConversion[index]] = value
-            themeManager.modifyTheme(self.mid, miscMap=self.misc)
-        elif maps.fontNameConversion.get(index) is not None:
-            self.properties[index] = value
-            self.textFont[maps.fontNameConversion[index]] = value
-            themeManager.modifyTheme(self.mid, fontMap=self.textFont)
-        elif self.properties.get(index) is not None:
+        if self.properties.get(index) is not None:
             self.properties[index] = value
         elif self.heiarchy.get(index) is not None:
             if (index == 'parent'):
@@ -150,8 +137,6 @@ class baseGui:
             'position': udim2.fromOffset(100, 100),
             'rect': Rect(Vector2(200, 200), Vector2(100, 50)),
 
-            'clipsDescendants': False,
-
             'absolutePosition': Vector2(100, 100),
             'absoluteSize': Vector2(200, 150),
 
@@ -168,7 +153,6 @@ class baseGui:
             'zindex': 1,
 
             'mid': 'none',
-            'instance': 'none',
 
             'mouseButton1Click': 'none',
             'onHoverStart': 'none',
@@ -178,7 +162,6 @@ class baseGui:
             'font': 'fasterOne',
             'fontSize': 10,
 
-            'shape': 'rounded_rectange', #rectangle, rounded_rectange, ellipse
             'cornerRadius': 10, #only for rounded_rectange
             'borderWidth': 2,
             'shadowWidth': 2,
@@ -235,14 +218,13 @@ class baseGui:
         self.onHoverStart = phxSignal()
         self.onHoverStop = phxSignal()
 
-    def subLoad(self, instance, parent):
-        self.instance = instance
+    def subLoad(self, rect, parent):
+        self.rect = rect
         if parent:
             self.parent = parent
 
-        #renderCycle.addTaskToRenderCycle(self.update, self.mid + '_update')
-
     def fix(self):
+        
         position = None
         size = None
         if self.parent and type(self.parent) != str and type(self.parent) != worldClass:
@@ -256,9 +238,7 @@ class baseGui:
 
             position = Vector2(mathf.lerp(pPos.x, pPos.x + pSize.x, fP.x) + fpO.x, mathf.lerp(pPos.y, pPos.y + pSize.y, fP.y) + fpO.y)
             size = Vector2(mathf.lerp(0, pSize.x, fS.x) + fsO.x, mathf.lerp(0, pSize.y, fS.y) + fsO.y)
-
-            if self.clipsDescendants:
-                self.instance._setup_container(self.parent.instance)
+        
         else:
             container = renderCycle.localEnv["displayResolution"]
 
@@ -272,31 +252,24 @@ class baseGui:
 
             position = Vector2(mathf.lerp(pPos.x, pPos.x + pSize.x, fP.x) + fpO.x, mathf.lerp(pPos.y, pPos.y + pSize.y, fP.y) + fpO.y)
             size = Vector2(mathf.lerp(0, pSize.x, fS.x) + fsO.x, mathf.lerp(0, pSize.y, fS.y) + fsO.y)
-
+        
         self.absolutePosition = position
         self.absoluteSize = size
 
-        self.instance.set_position(position)
-        self.instance.set_dimensions(size)
-
-        if allowsText.get(self.absoluteType):
-            self.instance.set_text(self.text)
-
-    def setColors(self):
-        self.instance.colours = self.colors
+        self.rect = pygame.Rect(position, size)
 
     def update(self, dt, events):
 
-        createThread(self.fix)
-
-        createThread(self.setColors)
-
-        for event in events:
-            if hasattr(event, 'ui_element') and event.ui_element == self.instance:
-                if event.type == pygame_gui.UI_BUTTON_ON_UNHOVERED:
-                    self.onHoverStop.emit()
-                elif event.type == pygame_gui.UI_BUTTON_ON_HOVERED:
-                    self.onHoverStart.emit()
-
         for child in self.children:
-            createThread(child.update, dt, events)
+            child.update(dt, events)
+
+        self.fix()
+
+        screen = renderCycle.getScreen()
+        
+        r = pygame.draw.rect(screen, (255, 255, 255), self.rect, 2, 15)
+
+        #pygame.rect.clip for parent clipping
+
+        if allowsText.get(self.absoluteType):
+            z = gameConstants.gameFont.render_to(screen, (self.absolutePosition + self.absoluteSize / 2), self.text, (0, 0, 0))

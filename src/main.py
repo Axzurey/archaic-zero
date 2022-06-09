@@ -1,7 +1,6 @@
 import time
 import pygame
 import client.renderCycle as renderCycle
-import client.uiService as uiService
 from components.attackMenu import createAttackMenu
 from definedWorld import loadWorld
 from game import createPlayer
@@ -16,8 +15,6 @@ res = renderCycle.localEnv['displayResolution']
 screen = pygame.display.set_mode(res, pygame.DOUBLEBUF)
 
 renderCycle.setScreen(screen)
-
-uiService.initializeUiService()
 
 time.sleep(1)
 

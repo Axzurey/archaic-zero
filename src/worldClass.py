@@ -1,5 +1,4 @@
 from circ.thrd import createThread
-import client.renderCycle as renderCycle
 
 class worldClass:
     children = []
@@ -9,6 +8,6 @@ class worldClass:
 
     def update(self, dt, events):
         for child in self.children:
-            createThread(child.update, dt, events)
+            child.update(dt, events)
 
 worldRoot = worldClass()
