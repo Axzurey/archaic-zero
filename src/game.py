@@ -34,39 +34,23 @@ def drawAllSpriteGroups():
 
     dt = time.time() - lastupd
 
-    t = time.time()
-
-    t1 = time.time()
-
     for v in spriteGroups.values():
         v.update(spriteGroups)
-
-    print('sprite groups:', time.time() - t1)
 
     screenCol = (255, 0, 255)
     screen = renderCycle.getScreen()
 
     screen.fill(screenCol)
 
-    t2 = time.time()
-
     for v in spriteGroups.values():
         v.draw(renderCycle.getScreen())
 
-    print('sprite draw: ', time.time() - t2)
-
-
-    t3 = time.time()
 
     worldRoot.update(dt, renderCycle.lastEvents)
-
-    print('world update: ', time.time() - t3)
 
     lastupd = time.time()
 
     pygame.display.update()
-
-    print('updated after: ', time.time() - t)
 
 renderCycle.addTaskToRenderCycle(drawAllSpriteGroups, 'process:drawAllSpriteGroups')
 

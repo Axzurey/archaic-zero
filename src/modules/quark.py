@@ -11,8 +11,8 @@ def switchParent(c, p):
             px.children.remove(c)
 
     if p == worldRoot:
-        c.heiarchy["parent"] = worldRoot
+        c.properties["parent"] = worldRoot
         worldRoot.children.append(c)
     else:
-        p.heiarchy['children'].append(c)
-        c.heiarchy['parent'] = p
+        p.properties['children'].append(c)
+        c.properties['parent'] = p

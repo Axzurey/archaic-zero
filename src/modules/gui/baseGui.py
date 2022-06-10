@@ -29,22 +29,13 @@ class baseGui:
         'absolutePosition': Vector2(100, 100),
         'absoluteSize': Vector2(200, 150),
 
-        'clipsDescendants': False,
-
         'backgroundColor': '#45494e',
-        "backgroundColorHover":"#35393e",
-        "backgroundColordisabled":"#25292e",
         'textColor': '#c5cbd8',
-        "textColorHover":"#FFFFFF",
-        "textColorDisabled":"#6d736f",
         'borderColor': '#DDDDDD',
-        'borderColorHover': '#FFFFFF',
-        'borderColorDisabled': '#808080',
 
         'zindex': 1,
 
         'mid': 'none',
-        'instance': 'none',
 
         'mouseButton1Click': 'none',
         'onHoverStart': 'none',
@@ -54,74 +45,25 @@ class baseGui:
         'font': 'fasterOne',
         'fontSize': 10,
 
-        'shape': 'rounded_rectange', #rectangle, rounded_rectange, ellipse
-        'cornerRadius': 10, #only for rounded_rectange
-        'borderWidth': 2,
-        'shadowWidth': 2,
-        'textAlignH': 'center', #left, center, right
-        'textAlignV': 'center', #top, center, bottom
-    }
+        'cornerRadius': 10,
+        'borderWidth': 5,
 
-    misc = {
-        'shape': 'rounded_rectange', #rectangle, rounded_rectange, ellipse
-        'shape_corner_radius': '20', #only for rounded_rectange
-        'border_width': '2',
-        'shadow_width': '2',
-        'text_horiz_alignment': 'center', #left, center, right
-        'text_vert_alignment': 'center', #top, center, bottom
-    }
-
-    textFont = {
-        'name': 'fasterOne',
-        'size': 20,
-    }
-
-    heiarchy = {
-        'children': [],
         'parent': 'none',
-    }
-
-    colors = {
-        "normal_bg":"#45494e",
-        "hovered_bg":"#35393e",
-        "disabled_bg":"#25292e",
-        "selected_bg":"#193754",
-        "dark_bg":"#15191e",
-        "normal_text":"#c5cbd8",
-        "hovered_text":"#FFFFFF",
-        "selected_text":"#FFFFFF",
-        "disabled_text":"#6d736f",
-        "link_text": "#0000EE",
-        "link_hover": "#2020FF",
-        "link_selected": "#551A8B",
-        "text_shadow": "#777777",
-        "normal_border": "#DDDDDD",
-        "hovered_border": "#B0B0B0",
-        "disabled_border": "#808080",
-        "selected_border": "#8080B0",
-        "active_border": "#8080B0",
-        "filled_bar":"#f4251b",
-        "unfilled_bar":"#CCCCCC"
+        'children': []
     }
 
     def __getattr__(self, index):
-        if (maps.colorNameConversion.get(index) is not None):
-            return self.colors[maps.colorNameConversionInverse[index]]
-        elif self.properties.get(index) is not None:
+        if self.properties.get(index) is not None:
             return self.properties[index]
-        elif self.heiarchy.get(index) is not None:
-            return self.heiarchy[index]
         else:
             return super().__getattribute__(index)
 
     def __setattr__(self, index, value):
         if self.properties.get(index) is not None:
-            self.properties[index] = value
-        elif self.heiarchy.get(index) is not None:
             if (index == 'parent'):
                 switchParent(self, value)
             else:
-                self.heiarchy[index] = value
+                self.properties[index] = value
         else:
             super().__setattr__(index, value)
             #raise Exception(f'Property {index} does not exist on this class')
@@ -141,14 +83,8 @@ class baseGui:
             'absoluteSize': Vector2(200, 150),
 
             'backgroundColor': '#45494e',
-            "backgroundColorHover":"#35393e",
-            "backgroundColordisabled":"#25292e",
             'textColor': '#c5cbd8',
-            "textColorHover":"#FFFFFF",
-            "textColorDisabled":"#6d736f",
             'borderColor': '#DDDDDD',
-            'borderColorHover': '#FFFFFF',
-            'borderColorDisabled': '#808080',
 
             'zindex': 1,
 
@@ -162,53 +98,11 @@ class baseGui:
             'font': 'fasterOne',
             'fontSize': 10,
 
-            'cornerRadius': 10, #only for rounded_rectange
-            'borderWidth': 2,
-            'shadowWidth': 2,
-            'textAlignH': 'center', #left, center, right
-            'textAlignV': 'center', #top, center, bottom
-        }
+            'cornerRadius': 10,
+            'borderWidth': 5,
 
-        self.misc = {
-            'shape': 'rounded_rectange', #rectangle, rounded_rectange, ellipse
-            'shape_corner_radius': '20', #only for rounded_rectange
-            'border_width': '2',
-            'shadow_width': '2',
-            'text_horiz_alignment': 'center', #left, center, right
-            'text_vert_alignment': 'center', #top, center, bottom
-        }
-
-        self.textFont = {
-            'name': 'fasterOne',
-            'size': 20,
-        }
-
-        self.heiarchy = {
-            'children': [],
             'parent': 'none',
-        }
-
-        self.colors = {
-            "normal_bg":"#45494e",
-            "hovered_bg":"#35393e",
-            "disabled_bg":"#25292e",
-            "selected_bg":"#193754",
-            "dark_bg":"#15191e",
-            "normal_text":"#c5cbd8",
-            "hovered_text":"#FFFFFF",
-            "selected_text":"#FFFFFF",
-            "disabled_text":"#6d736f",
-            "link_text": "#0000EE",
-            "link_hover": "#2020FF",
-            "link_selected": "#551A8B",
-            "text_shadow": "#777777",
-            "normal_border": "#DDDDDD",
-            "hovered_border": "#B0B0B0",
-            "disabled_border": "#808080",
-            "selected_border": "#8080B0",
-            "active_border": "#8080B0",
-            "filled_bar":"#f4251b",
-            "unfilled_bar":"#CCCCCC"
+            'children': []
         }
 
         self.absoluteType = absoluteType
@@ -267,9 +161,15 @@ class baseGui:
 
         screen = renderCycle.getScreen()
         
-        r = pygame.draw.rect(screen, (255, 255, 255), self.rect, 2, 15)
+        main = pygame.draw.rect(screen, (255, 255, 255), self.rect, 0, 15)
+
+        border = pygame.draw.rect(screen, (100, 100, 100), self.rect, self.borderWidth, 15)
 
         #pygame.rect.clip for parent clipping
 
         if allowsText.get(self.absoluteType):
-            z = gameConstants.gameFont.render_to(screen, (self.absolutePosition + self.absoluteSize / 2), self.text, (0, 0, 0))
+            b = gameConstants.gameFont.get_rect(self.text)
+            sz = Vector2(b.width, b.height)
+            gameConstants.gameFont.render_to(screen, (self.absolutePosition + self.absoluteSize / 2) - sz / 2, self.text, (0, 0, 0))
+
+            #maybe instead of render_to use blit? (it doesn't show above the main rect)
