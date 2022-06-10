@@ -1,12 +1,12 @@
 import time
 from pygame import Vector2
 import pygame
-from circ.thrd import createThread
 import client.renderCycle as renderCycle
 from data.exposed import addEntity, addSprite
 from modules.entity import entity
 from modules.gui.guiFrame import guiFrame
 from modules.gui.textButton import textButton
+from modules.gui.imageLabel import imageLabel
 from modules.models.playerEntity import playerEntity
 from modules.sprite import sprite
 from modules.udim2 import udim2
@@ -93,6 +93,16 @@ def createFrame(position: udim2, size: udim2, parent) -> guiFrame:
     t.size = size
 
     updatableUI[t.mid] = t
+    return t
+
+def createImage(position: udim2, size: udim2, imagePath: str, parent: guiFrame = None) -> imageLabel:
+    t = imageLabel(parent)
+    t.position = position
+    t.size = size
+    t.setImage(imagePath)
+
+    updatableUI[t.mid] = t
+
     return t
 
 def createButton(position: udim2, size: udim2, text: str, parent: guiFrame = None) -> textButton:

@@ -16,6 +16,10 @@ allowsText = {
     'textButton': True,
 }
 
+allowsImage = {
+    'imageLabel': True,
+}
+
 class baseGui:
 
     properties = {
@@ -32,21 +36,18 @@ class baseGui:
         'backgroundColor': '#45494e',
         'textColor': '#c5cbd8',
         'borderColor': '#DDDDDD',
+        'borderRadius': 10,
+        'borderWidth': 5,
 
         'zindex': 1,
 
         'mid': 'none',
 
-        'mouseButton1Click': 'none',
         'onHoverStart': 'none',
         'onHoverStop': 'none',
-        'doubleClick': 'none',
 
         'font': 'fasterOne',
         'fontSize': 10,
-
-        'cornerRadius': 10,
-        'borderWidth': 5,
 
         'parent': 'none',
         'children': []
@@ -85,21 +86,18 @@ class baseGui:
             'backgroundColor': '#45494e',
             'textColor': '#c5cbd8',
             'borderColor': '#DDDDDD',
+            'borderRadius': 10,
+            'borderWidth': 5,
 
             'zindex': 1,
 
             'mid': 'none',
 
-            'mouseButton1Click': 'none',
             'onHoverStart': 'none',
             'onHoverStop': 'none',
-            'doubleClick': 'none',
 
             'font': 'fasterOne',
             'fontSize': 10,
-
-            'cornerRadius': 10,
-            'borderWidth': 5,
 
             'parent': 'none',
             'children': []
@@ -154,22 +152,27 @@ class baseGui:
 
     def update(self, dt, events):
 
-        for child in self.children:
-            child.update(dt, events)
-
         self.fix()
 
         screen = renderCycle.getScreen()
-        
-        main = pygame.draw.rect(screen, (255, 255, 255), self.rect, 0, 15)
 
-        border = pygame.draw.rect(screen, (100, 100, 100), self.rect, self.borderWidth, 15)
+        mainS = pygame.Surface(self.absoluteSize)
+
+        mainS.set_alpha((1 - self.transparency) * 255)
+        
+        main = pygame.draw.rect(screen, self.backgroundColor, self.rect, 0, self.borderRadius if self.borderRadius > 0 else -1)
+
+        border = pygame.draw.rect(screen, self.borderColor, self.rect, self.borderWidth, self.borderRadius if self.borderRadius > 0 else -1)
 
         #pygame.rect.clip for parent clipping
+
+        if allowsImage.get(self.absoluteType):
+                screen.blit(self.image, self.rect)
 
         if allowsText.get(self.absoluteType):
             b = gameConstants.gameFont.get_rect(self.text)
             sz = Vector2(b.width, b.height)
-            gameConstants.gameFont.render_to(screen, (self.absolutePosition + self.absoluteSize / 2) - sz / 2, self.text, (0, 0, 0))
+            gameConstants.gameFont.render_to(screen, (self.absolutePosition + self.absoluteSize / 2) - sz / 2, self.text, self.textColor)
 
-            #maybe instead of render_to use blit? (it doesn't show above the main rect)
+        for child in self.children:
+            child.update(dt, events)
