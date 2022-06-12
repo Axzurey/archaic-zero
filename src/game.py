@@ -1,16 +1,19 @@
 import time
+from typing import Union
 from pygame import Vector2
 import pygame
 import client.renderCycle as renderCycle
 from data.exposed import addEntity, addSprite
 from modules.entity import entity
+from modules.gui.floatingTextButton import floatingTextButton
+from modules.gui.scalarBar import scalarBar
 from modules.gui.guiFrame import guiFrame
 from modules.gui.textButton import textButton
 from modules.gui.imageLabel import imageLabel
 from modules.models.playerEntity import playerEntity
 from modules.sprite import sprite
 from modules.udim2 import udim2
-from worldClass import worldRoot
+from worldClass import worldClass, worldRoot
 
 spriteGroups = {
     'worldModel': pygame.sprite.Group(),
@@ -87,7 +90,24 @@ def createSprite(position: Vector2, size: Vector2, imagePath: str) -> sprite:
     #renderCycle.addTaskToRenderCycle(s.draw, f'{s.id}:draw')
     return s
 
-def createFrame(position: udim2, size: udim2, parent) -> guiFrame:
+def createScalarBar(position: udim2, size: udim2, parent: guiFrame = None) -> scalarBar:
+    t = scalarBar(parent)
+    t.position = position
+    t.size = size
+
+    updatableUI[t.mid] = t
+    return t
+
+def createFloatingTextButton(position: udim2, size: udim2, text: str, parent: guiFrame = None) -> textButton:
+    t = floatingTextButton(parent)
+    t.position = position
+    t.size = size
+    t.setText(text)
+
+    updatableUI[t.mid] = t
+    return t
+
+def createFrame(position: udim2, size: udim2, parent: Union[guiFrame, worldClass] = None) -> guiFrame:
     t = guiFrame(parent)
     t.position = position
     t.size = size

@@ -3,4 +3,4 @@ import pygame.freetype
 
 pygame.freetype.init()
 
-gameFont = pygame.freetype.Font('src/fonts/fasterOne.ttf', 20)
+gameFont = pygame.freetype.Font('src/fonts/Montserrat.ttf', 20)

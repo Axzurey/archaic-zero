@@ -1,47 +1,46 @@
+import random
 from struct import calcsize
+import time
 import pygame
+from circ.thrd import createThread
 import client.renderCycle as renderCycle
-from game import  createButton, createEntity, createFrame, createImage
+from game import  createButton, createFrame, createImage, createFloatingTextButton, createScalarBar
 from modules.udim2 import udim2
 from worldClass import worldRoot
 
-def createAttackMenu():
+class attackMenu():
+    def __init__(self, team, enemies):
 
-    attackBar = createFrame(udim2.fromScale(.75, .75), udim2.fromScale(.2, .2), worldRoot)
+        self.team = team;
+        self.enemies = enemies;
 
-    attackBar.backgroundColor = '#00FFFF' #NOT WORKING!
+        self.frames = {
+            "stasis": None
+        }
 
-    attack1 = createButton(udim2.fromScale(0, 0), udim2.fromScale(.35, .2), 'HELLO WORLD!', attackBar)
+        self.frames["stasis"] = createFrame(udim2.fromOffset(0, 0), udim2.fromScale(1, 1), worldRoot)
 
-    attack1.backgroundColor = '#BAD6FF'
+        stasis = self.frames["stasis"]
 
-    attack1.textColor = '#000000'
+        #stasis.transparency = 1;
+        #stasis.borderTransparency = 1;
 
-    attack1.backgroundColorHover = "#00FFFF"
+        attackButton = createFloatingTextButton(udim2.fromScale(.8, .8), udim2.fromOffset(100, 100), 'A', stasis)
 
-    attack1.font = 'fasterOne'
+        attackButton.backgroundColor = '#888585'
 
-    attack1.shape = 'rounded_rectangle'
+        attackButton.borderWidth = 2
 
-    attack1.cornerRadius = 5
+        attackButton.borderRadius = 90
 
-    attack1.borderWidth = 2
+        bar = createScalarBar(udim2.fromScale(.8, .8), udim2.fromOffset(100, 100), stasis)
 
-    attack1.fontSize = 25
+        def ud():
+            while (True):
+                time.sleep(3)
+                bar.setPercent(random.random())
 
-    attack1.text = 'THIS IS MY ATTACK!'
+        createThread(ud)
 
-    topBar = createFrame(udim2.fromOffset(0, 0), udim2.fromScale(1, .1), worldRoot)
-
-    topBar.backgroundColor = '#3f3f3f'
-
-    topBar.transparency = 1
-
-    enemyImage = createImage(udim2.fromScale(.2, .5), udim2.fromOffset(50, 50)), 'src/images/enemy.png', topBar)
-
-   # print(attackBar.parent, attackBar.children)
-
-   # print(attack1.parent, attack1.children)
-
-   # print(worldRoot.children)
-    
+    def update(self):
+        pass

@@ -29,7 +29,7 @@ def loadWorld():
     #x = random.randrange(0, resolution[0])
     #y = random.randrange(0, resolution[1])
     #ent = createEntity(pygame.Vector2(0, 0), pygame.Vector2(50, 50), 'src/images/enemy.png')
-    
+    return
     walls = []
 
     y = 0
