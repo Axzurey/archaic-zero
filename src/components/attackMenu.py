@@ -33,12 +33,22 @@ class attackMenu():
 
         attackButton.borderRadius = 90
 
-        bar = createScalarBar(udim2.fromScale(.8, .8), udim2.fromOffset(100, 100), stasis)
+        bar = createScalarBar(udim2.fromScale(.2, .2), udim2.fromOffset(400, 100), stasis)
+
+        bar.foregroundColor = '#00ff00'
+        bar.backgroundColor = '#000000'
 
         def ud():
-            while (True):
-                time.sleep(3)
-                bar.setPercent(random.random())
+            time.sleep(3)
+            bar.setPercent(.5)
+            time.sleep(3)
+            bar.setPercent(.75)
+            time.sleep(3)
+            bar.setPercent(1)
+            time.sleep(3)
+            bar.setPercent(0)
+            time.sleep(3)
+            bar.setPercent(1)
 
         createThread(ud)
 

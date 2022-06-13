@@ -1,5 +1,6 @@
 import pygame
 import pygame.gfxdraw
+import numpy
 import uuid
 from pygame import Rect, Vector2
 from modules.quark import switchParent
@@ -111,8 +112,10 @@ class baseGui:
             'borderWidth': 5,
 
             'scalePercent': .75,
+            'scaleDelta': 0,
+            'targetPercent': .75,
             'scaleMode': 'linear',
-            'scaleSpeed': 1,
+            'scaleLength': 1, #in seconds
 
             'hovering': False,
 
@@ -199,9 +202,18 @@ class baseGui:
             screen = renderCycle.getScreen()
 
             if allowsScale.get(self.absoluteType) is not None:
+                t = self.scaleDelta / self.scaleLength
                 if self.scaleMode == 'linear':
-                    self.scalePercent = mathf.lerp(self.scalePercent, 1, dt * self.scaleSpeed)
-                #create rects
+                    self.scalePercent = mathf.lerp(self.scalePercent, self.targetPercent, t)
+                    #print(self.scalePercent, self.targetPercent, t, self.scaleDelta)
+                    self.scaleDelta = numpy.clip(self.scaleDelta + dt, 0, self.scaleLength)
+
+
+                back = pygame.draw.rect(screen, self.backgroundColor, self.rect, 0, self.borderRadius if self.borderRadius > 0 else -1)
+
+                scaledRect = pygame.Rect(self.absolutePosition, Vector2(self.scalePercent * self.absoluteSize.x, self.absoluteSize.y))
+
+                front = pygame.draw.rect(screen, self.foregroundColor, scaledRect, 0, -1)
             else:
                 if self.shape == 'rect':
 

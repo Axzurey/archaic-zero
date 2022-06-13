@@ -1,3 +1,4 @@
+import math
 import pygame
 from modules.gui.baseGui import baseGui
 
@@ -9,7 +10,8 @@ class scalarBar(baseGui):
         super().subLoad(rect, parent)
 
     def setPercent(self, percent: float):
-        self.scalePercent = percent;
+        self.targetPercent = percent;
+        self.scaleDelta = 0
 
     def setText(self, text: str):
         self.text = text
