@@ -1,5 +1,8 @@
+import random
 from components.attackMenu import attackMenu
 import battle.battleEntity as battleEntity
+
+ts = ['water', 'earth', 'air', 'light', 'dark', 'fire']
 
 def createStandardBattle():
     turn = 1;
@@ -10,6 +13,7 @@ def createStandardBattle():
     for i in range(3):
         enemy = battleEntity.battleEntity(f'enemy{i}')
         enemies.append(enemy)
+        enemy.type = random.choice(ts)
     
     for i in range(3):
         member = battleEntity.battleEntity(f'member{i}')

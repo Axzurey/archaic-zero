@@ -6,6 +6,7 @@ import client.renderCycle as renderCycle
 from data.exposed import addEntity, addSprite
 from modules.entity import entity
 from modules.gui.floatingTextButton import floatingTextButton
+from modules.gui.polygon import polygon
 from modules.gui.scalarBar import scalarBar
 from modules.gui.guiFrame import guiFrame
 from modules.gui.textButton import textButton
@@ -92,6 +93,14 @@ def createSprite(position: Vector2, size: Vector2, imagePath: str) -> sprite:
 
 def createScalarBar(position: udim2, size: udim2, parent: guiFrame = None) -> scalarBar:
     t = scalarBar(parent)
+    t.position = position
+    t.size = size
+
+    updatableUI[t.mid] = t
+    return t
+
+def createPolygon(position: udim2, size: udim2, parent: guiFrame = None) -> polygon:
+    t = polygon(parent)
     t.position = position
     t.size = size
 

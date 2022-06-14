@@ -4,9 +4,18 @@ import time
 import pygame
 from circ.thrd import createThread
 import client.renderCycle as renderCycle
-from game import  createButton, createFrame, createImage, createFloatingTextButton, createScalarBar
+from game import  createButton, createFrame, createImage, createFloatingTextButton, createPolygon, createScalarBar
 from modules.udim2 import udim2
 from worldClass import worldRoot
+
+typeColors = {
+    'fire': '#ff0000',
+    'water': '#0000ff',
+    'earth': '#00ff00',
+    'air': '#ffff00',
+    'light': '#ff00ff',
+    'dark': '#00ffff',
+}
 
 class attackMenu():
     def __init__(self, team, enemies):
@@ -33,10 +42,23 @@ class attackMenu():
 
         attackButton.borderRadius = 90
 
-        bar = createScalarBar(udim2.fromScale(.2, .2), udim2.fromOffset(400, 100), stasis)
+        t = 0
 
-        bar.foregroundColor = '#00ff00'
-        bar.backgroundColor = '#000000'
+        for enemy in enemies:
+            t += 1
+
+            bar = createScalarBar(udim2(0, .16 * t + .1 * t, -35 / 2, .2), udim2.fromOffset(300, 35), stasis)
+
+            bar.foregroundColor = '#00ff00'
+            bar.backgroundColor = '#000000'
+
+            bar.textSize = 10
+
+            bar.text = '250 | 250'
+
+            poly = createPolygon(udim2.fromScale(.15 * t + .1 * t, .2), udim2.fromOffset(0, 0), stasis)
+
+            poly.backgroundColor = typeColors[enemy.type]
 
         def ud():
             time.sleep(3)

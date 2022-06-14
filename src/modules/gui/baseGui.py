@@ -27,6 +27,10 @@ allowsImage = {
     #'floatingImageButton': True,
 }
 
+allowsShape = {
+    'polygon': True,
+}
+
 class baseGui:
 
     properties = {
@@ -83,6 +87,8 @@ class baseGui:
         if self.properties.get(index) is not None:
             if (index == 'parent'):
                 switchParent(self, value)
+            elif index == 'fontSize':
+                self.localFont = pygame.freetype.Font('src/fonts/Montserrat.ttf', int(value))
             else:
                 self.properties[index] = value
         else:
@@ -150,6 +156,7 @@ class baseGui:
         self.onMouseClick = phxSignal()
 
         self.mouseDown = False;
+        self.localFont = pygame.freetype.Font('src/fonts/Montserrat.ttf', 20)
 
     def subLoad(self, rect, parent):
         self.rect = rect
@@ -200,20 +207,31 @@ class baseGui:
             self.absoluteVisible = True;
 
             screen = renderCycle.getScreen()
-
-            if allowsScale.get(self.absoluteType) is not None:
+            if allowsShape.get(self.absoluteType) is not None:
+                if len(self.vertices) > 2:
+                    p = []
+                    for v in self.vertices:
+                        p.append(v + self.absolutePosition)
+                    poly = pygame.draw.polygon(screen, self.backgroundColor, p, 0)
+                    border = pygame.draw.polygon(screen, self.borderColor, p, self.borderWidth)
+            elif allowsScale.get(self.absoluteType) is not None:
                 t = self.scaleDelta / self.scaleLength
                 if self.scaleMode == 'linear':
+
+                    t = round(t, 3)
                     self.scalePercent = mathf.lerp(self.scalePercent, self.targetPercent, t)
-                    #print(self.scalePercent, self.targetPercent, t, self.scaleDelta)
+
                     self.scaleDelta = numpy.clip(self.scaleDelta + dt, 0, self.scaleLength)
 
+                shadow = pygame.Surface(self.rect.size, pygame.SRCALPHA)
+                shadow.fill((0, 0, 0, 255 * .1))
+                screen.blit(shadow, self.absolutePosition + Vector2(0, 5))
 
                 back = pygame.draw.rect(screen, self.backgroundColor, self.rect, 0, self.borderRadius if self.borderRadius > 0 else -1)
 
                 scaledRect = pygame.Rect(self.absolutePosition, Vector2(self.scalePercent * self.absoluteSize.x, self.absoluteSize.y))
 
-                front = pygame.draw.rect(screen, self.foregroundColor, scaledRect, 0, -1)
+                front = pygame.draw.rect(screen, self.foregroundColor, scaledRect, 0, self.borderRadius if self.borderRadius > 0 else -1)
             else:
                 if self.shape == 'rect':
 
@@ -237,14 +255,14 @@ class baseGui:
 
             if allowsText.get(self.absoluteType):
                 if self.shape == 'rect':
-                    b = gameConstants.gameFont.get_rect(self.text)
+                    b = self.localFont.get_rect(self.text)
                     sz = Vector2(b.width, b.height)
-                    gameConstants.gameFont.render_to(screen, (self.absolutePosition + self.absoluteSize / 2) - sz / 2, self.text, self.textColor)
+                    self.localFont.render_to(screen, (self.absolutePosition + self.absoluteSize / 2) - sz / 2, self.text, self.textColor)
                 elif self.shape == 'circle':
-                    gameConstants.gameFont.size = 80
-                    b = gameConstants.gameFont.get_rect(self.text)
+                    self.localFont.size = 80
+                    b = self.localFont.get_rect(self.text)
                     sz = Vector2(b.width, b.height)
-                    gameConstants.gameFont.render_to(screen, self.absolutePosition - sz / 2, self.text, self.textColor)
+                    self.localFont.render_to(screen, self.absolutePosition - sz / 2, self.text, self.textColor)
         
         else:
             self.absoluteVisible = False;
