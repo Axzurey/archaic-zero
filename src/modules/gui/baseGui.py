@@ -16,6 +16,7 @@ allowsText = {
     'textButton': True,
     'floatingTextButton': True,
     'scalarBar': True,
+    'textLabel': True,
 }
 
 allowsScale = {
@@ -34,47 +35,7 @@ allowsShape = {
 class baseGui:
 
     properties = {
-        'absoluteType': 'none', #would be textButton, guiFrame, etc
-
-        'text': '[notext]',
-        'size': udim2.fromOffset(200, 150),
-        'position': udim2.fromOffset(100, 100),
-        'rect': Rect(Vector2(200, 200), Vector2(100, 50)),
-
-        'absolutePosition': Vector2(100, 100),
-        'absoluteSize': Vector2(200, 150),
-
-        'backgroundColor': '#45494e',
-        'textColor': '#c5cbd8',
-        'borderColor': '#DDDDDD',
-        'borderRadius': 10,
-        'borderWidth': 5,
-
-        'shape': 'rect',
-
-        'zindex': 1,
-
-        'visible': True,
-        'absoluteVisible': True,
-
-        'mid': 'none',
-
-        'onHoverStart': 'none',
-        'onHoverStop': 'none',
-
-        'font': 'fasterOne',
-        'fontSize': 10,
-
-        'transparency': 0,
-        'borderTransparency': 0,
-
-        'scalePercent': .75,
-        'scaleMode': 'linear',
-
-        'foregroundColor': 'A5F488',
-
-        'parent': 'none',
-        'children': []
+        
     }
 
     def __getattr__(self, index):
@@ -111,6 +72,9 @@ class baseGui:
 
             'shape': 'rect', #or circle
 
+            'borderVisible': True,
+            'backgroundVisible': True,
+
             'backgroundColor': '#45494e',
             'textColor': '#c5cbd8',
             'borderColor': '#DDDDDD',
@@ -144,7 +108,7 @@ class baseGui:
             'fontSize': 10,
 
             'parent': 'none',
-            'children': []
+            'children': [],
         }
 
         self.absoluteType = absoluteType
@@ -157,6 +121,8 @@ class baseGui:
 
         self.mouseDown = False;
         self.localFont = pygame.freetype.Font('src/fonts/Montserrat.ttf', 20)
+
+        self.alive = True;
 
     def subLoad(self, rect, parent):
         self.rect = rect
@@ -198,7 +164,12 @@ class baseGui:
 
         self.rect = pygame.Rect(position, size)
 
+    def destroy(self):
+        self.alive = False
+
     def update(self, dt, events):
+
+        if not self.alive: return
 
         self.fix()
 
@@ -235,10 +206,11 @@ class baseGui:
             else:
                 if self.shape == 'rect':
 
+                    if self.backgroundVisible:
+                        main = pygame.draw.rect(screen, self.backgroundColor, self.rect, 0, self.borderRadius if self.borderRadius > 0 else -1)
 
-                    main = pygame.draw.rect(screen, self.backgroundColor, self.rect, 0, self.borderRadius if self.borderRadius > 0 else -1)
-
-                    border = pygame.draw.rect(screen, self.borderColor, self.rect, self.borderWidth, self.borderRadius if self.borderRadius > 0 else -1)
+                    if self.borderVisible:
+                        border = pygame.draw.rect(screen, self.borderColor, self.rect, self.borderWidth, self.borderRadius if self.borderRadius > 0 else -1)
                 
                 elif self.shape == 'circle':
 

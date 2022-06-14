@@ -1,3 +1,6 @@
+from modules.signal import phxSignal
+
+
 allStatusses = [
     'burn', #take damage every turn
     'freeze', #will not be able to attack next turn
@@ -33,6 +36,18 @@ class battleEntity:
 
         self.target = None
 
+        self.healthChanged = phxSignal()
+
+    def update(self):
+        print(self.statusses)
+        for i in self.statusses:
+            if i == 'burn':
+                self.takeDamage(1)
+            if i == 'freeze':
+                self.takeDamage(1)
+            if i == 'spreadingFire':
+                self.takeDamage(1)
+
     def setTarget(self, target):
         self.target = target
 
@@ -46,6 +61,7 @@ class battleEntity:
         self.health -= damage
         if self.health <= 0:
             self.health = 0 #it dead now
+        self.healthChanged.emit()
 
     def heal(self, heal):
         self.health += heal
@@ -56,5 +72,5 @@ class battleEntity:
         target.takeDamage(10)
 
     def afflict(self, *affliction: str):
-        for i in [affliction]:
+        for i in affliction:
             self.statusses.append(i)

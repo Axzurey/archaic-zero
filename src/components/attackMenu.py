@@ -2,9 +2,10 @@ import random
 from struct import calcsize
 import time
 import pygame
+from battle.battleEntity import battleEntity
 from circ.thrd import createThread
 import client.renderCycle as renderCycle
-from game import  createButton, createFrame, createImage, createFloatingTextButton, createPolygon, createScalarBar
+from game import  createButton, createFrame, createImage, createFloatingTextButton, createPolygon, createScalarBar, createTextLabel
 from modules.udim2 import udim2
 from worldClass import worldRoot
 
@@ -18,7 +19,9 @@ typeColors = {
 }
 
 class attackMenu():
-    def __init__(self, team, enemies):
+    def __init__(self, team: list[battleEntity], enemies: list[battleEntity], nextTurn: callable):
+
+        self.nextTurn = nextTurn
 
         self.team = team;
         self.enemies = enemies;
@@ -44,10 +47,25 @@ class attackMenu():
 
         t = 0
 
+        enemyBars = []
+
+        def updText():
+            for dist in enemyBars:
+                enemy = dist['enemy']
+                bar = dist['bar']
+                bar.text = f'{enemy.health} | {enemy.maxHealth}'
+
+                bar.setPercent(enemy.health / enemy.maxHealth)
+
         for enemy in enemies:
             t += 1
 
-            bar = createScalarBar(udim2(0, .16 * t + .1 * t, -35 / 2, .2), udim2.fromOffset(300, 35), stasis)
+            ename = createTextLabel(udim2(320 * t + 50 * t, 0, 0, .04), udim2.fromOffset(300, 35), f'enemy #{t}', stasis)
+
+            ename.backgroundVisible = False
+            ename.borderVisible = False
+
+            bar = createScalarBar(udim2(320 * t + 50 * t, 0, -35 / 2, .1), udim2.fromOffset(300, 35), stasis)
 
             bar.foregroundColor = '#00ff00'
             bar.backgroundColor = '#000000'
@@ -56,23 +74,22 @@ class attackMenu():
 
             bar.text = '250 | 250'
 
-            poly = createPolygon(udim2.fromScale(.15 * t + .1 * t, .2), udim2.fromOffset(0, 0), stasis)
+            poly = createPolygon(udim2(320 * t + 50 * t, 0, 0, .1), udim2.fromOffset(0, 0), stasis)
 
             poly.backgroundColor = typeColors[enemy.type]
 
-        def ud():
-            time.sleep(3)
-            bar.setPercent(.5)
-            time.sleep(3)
-            bar.setPercent(.75)
-            time.sleep(3)
-            bar.setPercent(1)
-            time.sleep(3)
-            bar.setPercent(0)
-            time.sleep(3)
-            bar.setPercent(1)
+            enemy.healthChanged.connect(updText)
 
-        createThread(ud)
+            enemyBars.append({
+                'bar': bar,
+                'poly': poly,
+                'ename': ename,
+                'enemy': enemy
+            })
+
+        createThread(self.update)
 
     def update(self):
-        pass
+        while (True):
+            time.sleep(3)
+            self.nextTurn()
