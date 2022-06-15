@@ -1,10 +1,12 @@
 import uuid
 
+from circ.thrd import createThread
+
 class connection:
-    connected = True
     def __init__(self, idowner: str, callback: callable):
         self.callback = callback
         self.idowner = idowner
+        self.connected = True
 
     def disconnect(self):
         self.connected = False
@@ -24,6 +26,6 @@ class phxSignal:
         for conn in self.connections:
             if self.mid != conn.idowner: continue
             if conn.connected:
-                conn.callback()
+                createThread(conn.callback)
             else:
                 self.connections.remove(conn)

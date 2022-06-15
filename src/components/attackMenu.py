@@ -18,13 +18,18 @@ typeColors = {
     'dark': '#00ffff',
 }
 
+tx = 0
+
 class attackMenu():
-    def __init__(self, team: list[battleEntity], enemies: list[battleEntity], nextTurn: callable):
+    def __init__(self, team: list[battleEntity], enemies: list[battleEntity], nextTurn: callable, queueMove: callable):
 
         self.nextTurn = nextTurn
+        self.queueMove = queueMove;
 
         self.team = team;
         self.enemies = enemies;
+
+        self.currentTarget = self.enemies[0]
 
         self.frames = {
             "stasis": None
@@ -49,6 +54,12 @@ class attackMenu():
 
         enemyBars = []
 
+        attackframes = []
+
+        nextTurnButton = createFloatingTextButton(udim2.fromScale(.2, .8), udim2.fromOffset(100, 100), '>', stasis)
+
+        nextTurnButton.backgroundColor = '#00ff00'
+
         def updText():
             for dist in enemyBars:
                 enemy = dist['enemy']
@@ -56,6 +67,8 @@ class attackMenu():
                 bar.text = f'{enemy.health} | {enemy.maxHealth}'
 
                 bar.setPercent(enemy.health / enemy.maxHealth)
+
+                
 
         for enemy in enemies:
             t += 1
@@ -87,9 +100,42 @@ class attackMenu():
                 'enemy': enemy
             })
 
-        createThread(self.update)
+        moveIndex = 0
 
-    def update(self):
-        while (True):
-            time.sleep(3)
+        def up(t, v):
+            nonlocal moveIndex
+            self.queueMove(t, self.currentTarget, v['callback'])
+            moveIndex += 1
+
+        for teammate in team:
+            attackFrame = createFrame(udim2.fromScale(.64, .73), udim2.fromScale(.35, .25), stasis)
+
+            for x in range(2):
+                for y in range(2):
+                    v = teammate.moveset[x + y]
+                    b = createButton(udim2(10 * x + 280 * x + 10, 0, 10 * y + 110 * y + 10, 0), udim2.fromScale(.4, .3), v["name"], attackFrame)
+                    b.backgroundColor = typeColors[v["type"]]
+
+                    b.onMouseClick.connect(lambda: up(teammate, v))
+
+            attackFrame.backgroundColor = '#000000'
+
+            attackframes.append(attackFrame)
+            
+            attackFrame.visible = False
+
+        updText()
+
+        def run():
+            for i in attackframes:
+                i.visible = True
+                z = moveIndex
+                while (z == moveIndex):
+                    time.sleep(1 / 60)
+                
+                i.visible = False
             self.nextTurn()
+
+        nextTurnButton.onMouseClick.connect(run)
+
+        #createThread(self.update)

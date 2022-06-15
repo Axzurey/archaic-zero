@@ -175,6 +175,17 @@ class baseGui:
 
         if self.visible and (type(self.parent) == worldClass or self.parent.visible):
 
+            if pygame.mouse.get_pressed()[0]:
+                if (self.rect.collidepoint(pygame.mouse.get_pos()) and self.shape == 'rect') or (self.shape == 'circle' and (Vector2(pygame.mouse.get_pos()) - self.absolutePosition).magnitude() < self.absoluteSize.x / 2):
+                    if not self.mouseDown:
+                        self.onMouseClick.emit()
+                        
+                        self.mouseDown = True;
+                else:
+                    self.mouseDown = False;
+            else:
+                self.mouseDown = False;
+
             self.absoluteVisible = True;
 
             screen = renderCycle.getScreen()
@@ -238,12 +249,6 @@ class baseGui:
         
         else:
             self.absoluteVisible = False;
-
-        if pygame.mouse.get_pressed()[0]:
-            if not self.mouseDown and self.rect.collidepoint(pygame.mouse.get_pos()):
-                self.onMouseClick.emit()
-        else:
-            self.mouseDown = False;
 
         if self.rect.collidepoint(pygame.mouse.get_pos()):
             if not self.hovering:

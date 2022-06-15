@@ -22,13 +22,30 @@ def createStandardBattle():
         member = battleEntity.battleEntity(f'member{i}')
         team.append(member)
 
+    moveQueue = []
+
+    def queueMove(sender: battleEntity, target: battleEntity, move):
+        moveQueue.append({
+            'sender': sender,
+            'target': target,
+            'move': move
+        });
+
     def nextTurn():
         global turn
         turn += 1
         print(f'Turn {turn}')
-        for i in enemies:
-            i.update()
-        for i in team:
-            i.update()
+        for movedata in moveQueue:
+            movedata['move'](movedata['target'])
 
-    atkMenu = attackMenu(team, enemies, nextTurn)
+
+        for enemy in enemies:
+            enemy.update()
+        for teammate in team:
+            teammate.update()
+
+        moveQueue.clear()
+
+        print('NEXT TURN DONE!')
+
+    atkMenu = attackMenu(team, enemies, nextTurn, queueMove)

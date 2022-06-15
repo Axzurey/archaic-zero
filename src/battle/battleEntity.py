@@ -1,3 +1,4 @@
+import random
 from modules.signal import phxSignal
 
 
@@ -7,26 +8,47 @@ allStatusses = [
     'spreadingFire' #next turn, all adjacent enemies will receive this status + burn
 ]
 
+types = ['fire', 'water', 'earth', 'air', 'light', 'dark']
+
+def getRandomMovesFromType(self, type: str):
+    moves = {
+        'fire': [
+            {
+                'name': 'Solar Flare',
+                'type': 'fire',
+                'callback': lambda target: self.attack(target, 50)
+            },
+            {
+                'name': 'Heat Wave [EX]',
+                'type': 'fire',
+                'callback': lambda target: (target.afflict('burn', 'spreadingFire'), self.attack(target, 30))
+            },
+            {
+                'name': 'volcanic eruption',
+                'type': 'fire',
+                'callback': lambda target: (target.afflict('burn', 'spreadingFire'), self.attack(target, 30))
+            },
+            {
+                'name': 'fireball',
+                'type': 'fire',
+                'callback': lambda target: self.attack(target, 40)
+            },
+        ]
+    }
+
+    return [random.choice(moves[type]) for _ in range(4)]
+
+
+
 class battleEntity:
     def __init__(self, name: str):
         self.name = name
         self.health = 100
         self.maxHealth = 100
 
-        self.type = 'fire'
+        self.type = random.choice(types)
 
-        self.moveset = [
-            {
-                'name': 'Solar Flare',
-                'type': 'fire',
-                'callback': lambda target: self.attack(target)
-            },
-            {
-                'name': 'Heat Wave [EX]',
-                'type': 'fire',
-                'callback': lambda target: target.afflict('burn', 'spreadingFire')
-            }
-        ]
+        self.moveset = getRandomMovesFromType(self, self.type)
 
         self.statusses = []
 
@@ -39,7 +61,6 @@ class battleEntity:
         self.healthChanged = phxSignal()
 
     def update(self):
-        print(self.statusses)
         for i in self.statusses:
             if i == 'burn':
                 self.takeDamage(1)
@@ -68,8 +89,8 @@ class battleEntity:
         if self.health > self.maxHealth:
             self.health = self.maxHealth
 
-    def attack(self, target):
-        target.takeDamage(10)
+    def attack(self, target, damage):
+        target.takeDamage(damage)
 
     def afflict(self, *affliction: str):
         for i in affliction:
