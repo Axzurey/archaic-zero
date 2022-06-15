@@ -5,7 +5,6 @@ from modules.signal import phxSignal
 allStatusses = [
     'burn', #take damage every turn
     'freeze', #will not be able to attack next turn
-    'spreadingFire' #next turn, all adjacent enemies will receive this status + burn
 ]
 
 types = ['fire', 'water', 'earth', 'air', 'light', 'dark']
@@ -16,23 +15,70 @@ def getRandomMovesFromType(self, type: str):
             {
                 'name': 'Solar Flare',
                 'type': 'fire',
-                'callback': lambda target: self.attack(target, 50)
+                'callback': lambda target: self.attack(target, random.randrange(30, 50))
             },
             {
                 'name': 'Heat Wave [EX]',
                 'type': 'fire',
-                'callback': lambda target: (target.afflict('burn', 'spreadingFire'), self.attack(target, 30))
+                'callback': lambda target: (target.afflict({
+                    'type': 'burn',
+                    'duration': 3,
+                    'callback': lambda: self.takeDamage(random.randrange(10, 20)),
+                    'tick': 0
+                }), self.attack(target, random.randrange(10, 30)))
             },
             {
                 'name': 'volcanic eruption',
                 'type': 'fire',
-                'callback': lambda target: (target.afflict('burn', 'spreadingFire'), self.attack(target, 30))
+                'callback': lambda target: (target.afflict({
+                    'type': 'burn',
+                    'duration': 3,
+                    'callback': lambda: self.takeDamage(random.randrange(10, 20)),
+                    'tick': 0
+                }), self.attack(target, random.randrange(10, 30)))
             },
             {
                 'name': 'fireball',
                 'type': 'fire',
-                'callback': lambda target: self.attack(target, 40)
+                'callback': lambda target: self.attack(target, random.randrange(25, 50))
             },
+            {
+                'name': 'flame burst',
+                'type': 'fire',
+                'callback': lambda target: self.attack(target, random.randrange(30, 45))
+            }
+        ],
+        'water': [
+            {
+                'name': 'water blast',
+                'type': 'water',
+                'callback': lambda target: self.attack(target, random.randrange(30, 50))
+            },
+            {
+                'name': 'water wave',
+                'type': 'water',
+                'callback': lambda target: self.attack(target, random.randrange(30, 50))
+            },
+            {
+                'name': 'tsunami',
+                'type': 'water',
+                'callback': lambda target: self.attack(target, random.randrange(25, 40))
+            },
+            {
+                'name': 'waterfall',
+                'type': 'water',
+                'callback': lambda target: (self.attack(target, random.randrange(30, 50)), target.purgeAfflictions())
+            },
+            {
+                'name': 'rainy day',
+                'type': 'water',
+                'callback': lambda target: (self.purgeAfflictions(), self.afflict({
+                    'type': 'regeneration',
+                    'duration': 3,
+                    'callback': lambda: self.heal(random.randrange(15, 30)),
+                    'tick': 0
+                }))
+            }
         ]
     }
 
@@ -43,10 +89,10 @@ def getRandomMovesFromType(self, type: str):
 class battleEntity:
     def __init__(self, name: str):
         self.name = name
-        self.health = 100
-        self.maxHealth = 100
+        self.health = 1000
+        self.maxHealth = 1000
 
-        self.type = random.choice(types)
+        self.type = random.choice(['fire', 'water'])
 
         self.moveset = getRandomMovesFromType(self, self.type)
 
@@ -62,12 +108,11 @@ class battleEntity:
 
     def update(self):
         for i in self.statusses:
-            if i == 'burn':
-                self.takeDamage(1)
-            if i == 'freeze':
-                self.takeDamage(1)
-            if i == 'spreadingFire':
-                self.takeDamage(1)
+            if i['tick'] > i['duration']:
+                self.statusses.remove(i)
+                continue
+        
+            i['callback']()
 
     def setTarget(self, target):
         self.target = target
@@ -88,6 +133,9 @@ class battleEntity:
         self.health += heal
         if self.health > self.maxHealth:
             self.health = self.maxHealth
+
+    def purgeAfflictions(self):
+        self.statusses.clear()
 
     def attack(self, target, damage):
         target.takeDamage(damage)

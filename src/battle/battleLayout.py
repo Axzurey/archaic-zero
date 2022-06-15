@@ -15,8 +15,6 @@ def createStandardBattle():
     for i in range(3):
         enemy = battleEntity.battleEntity(f'enemy{i}')
         enemies.append(enemy)
-        enemy.type = random.choice(ts)
-        enemy.afflict('burn')
     
     for i in range(3):
         member = battleEntity.battleEntity(f'member{i}')
@@ -46,6 +44,6 @@ def createStandardBattle():
 
         moveQueue.clear()
 
-        print('NEXT TURN DONE!')
+        #print('NEXT TURN DONE!')
 
     atkMenu = attackMenu(team, enemies, nextTurn, queueMove)

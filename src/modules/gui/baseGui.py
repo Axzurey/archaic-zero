@@ -19,6 +19,11 @@ allowsText = {
     'textLabel': True,
 }
 
+allowsClick = {
+    'textButton': True,
+    'floatingTextButton': True,
+}
+
 allowsScale = {
     'scalarBar': True,
 }
@@ -173,9 +178,14 @@ class baseGui:
 
         self.fix()
 
+        m1d = False
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONUP:
+                m1d = True
+
         if self.visible and (type(self.parent) == worldClass or self.parent.visible):
 
-            if pygame.mouse.get_pressed()[0]:
+            if m1d and allowsClick.get(self.absoluteType):
                 if (self.rect.collidepoint(pygame.mouse.get_pos()) and self.shape == 'rect') or (self.shape == 'circle' and (Vector2(pygame.mouse.get_pos()) - self.absolutePosition).magnitude() < self.absoluteSize.x / 2):
                     if not self.mouseDown:
                         self.onMouseClick.emit()
@@ -250,14 +260,18 @@ class baseGui:
         else:
             self.absoluteVisible = False;
 
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
-            if not self.hovering:
-                self.hovering = True
-                self.onHoverStart.emit()
-        else:
-            if self.hovering:
-                self.hovering = False
-                self.onHoverStop.emit()
+        if self.absoluteVisible:
+            if self.rect.collidepoint(pygame.mouse.get_pos()):
+                if not self.hovering:
+                    self.hovering = True
+                    self.onHoverStart.emit()
+            else:
+                if self.hovering:
+                    self.hovering = False
+                    self.onHoverStop.emit()
+        elif self.hovering:
+            self.hovering = False
+            self.onHoverStop.emit()
 
         for child in self.children:
             child.update(dt, events)

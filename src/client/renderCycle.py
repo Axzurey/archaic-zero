@@ -46,7 +46,7 @@ def _renderCycle() -> None:
         lastUpdate = now
 
         events = pygame.event.get()
-
+        global lastEvents
         lastEvents = events
 
         for ev in events:

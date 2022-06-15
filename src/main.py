@@ -26,4 +26,4 @@ loadWorld()
 
 createStandardBattle()
 
-renderCycle.startCycle()    
+renderCycle.startCycle()

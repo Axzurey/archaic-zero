@@ -42,21 +42,13 @@ class attackMenu():
         #stasis.transparency = 1;
         #stasis.borderTransparency = 1;
 
-        attackButton = createFloatingTextButton(udim2.fromScale(.8, .8), udim2.fromOffset(100, 100), 'A', stasis)
-
-        attackButton.backgroundColor = '#888585'
-
-        attackButton.borderWidth = 2
-
-        attackButton.borderRadius = 90
-
         t = 0
 
         enemyBars = []
 
         attackframes = []
 
-        nextTurnButton = createFloatingTextButton(udim2.fromScale(.2, .8), udim2.fromOffset(100, 100), '>', stasis)
+        nextTurnButton = createFloatingTextButton(udim2.fromScale(.92, .9), udim2.fromOffset(100, 100), '>', stasis)
 
         nextTurnButton.backgroundColor = '#00ff00'
 
@@ -77,6 +69,11 @@ class attackMenu():
 
             ename.backgroundVisible = False
             ename.borderVisible = False
+
+            icon = createImage(udim2(320 * t + 50 * t + 140, 0, 0, .25), udim2.fromOffset(150, 150), f'src/images/{enemy.type}_phantom.png', stasis)
+
+            icon.backgroundVisible = False
+            icon.borderVisible = False
 
             bar = createScalarBar(udim2(320 * t + 50 * t, 0, -35 / 2, .1), udim2.fromOffset(300, 35), stasis)
 
@@ -102,10 +99,14 @@ class attackMenu():
 
         moveIndex = 0
 
+        nxtmv = False
+
         def up(t, v):
+            nonlocal nxtmv
             nonlocal moveIndex
             self.queueMove(t, self.currentTarget, v['callback'])
             moveIndex += 1
+            nxtmv = True
 
         for teammate in team:
             attackFrame = createFrame(udim2.fromScale(.64, .73), udim2.fromScale(.35, .25), stasis)
@@ -115,6 +116,8 @@ class attackMenu():
                     v = teammate.moveset[x + y]
                     b = createButton(udim2(10 * x + 280 * x + 10, 0, 10 * y + 110 * y + 10, 0), udim2.fromScale(.4, .3), v["name"], attackFrame)
                     b.backgroundColor = typeColors[v["type"]]
+
+                    b.textColor = '#ffffff'
 
                     b.onMouseClick.connect(lambda: up(teammate, v))
 
@@ -127,14 +130,19 @@ class attackMenu():
         updText()
 
         def run():
+            nonlocal nextTurnButton
+            nextTurnButton.visible = False
+            time.sleep(.1)
             for i in attackframes:
                 i.visible = True
-                z = moveIndex
-                while (z == moveIndex):
+                nonlocal nxtmv
+                while (not nxtmv):
                     time.sleep(1 / 60)
-                
+                nxtmv = False
                 i.visible = False
             self.nextTurn()
+            time.sleep(1)
+            nextTurnButton.visible = True
 
         nextTurnButton.onMouseClick.connect(run)
 
