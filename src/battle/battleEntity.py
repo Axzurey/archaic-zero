@@ -89,8 +89,8 @@ def getRandomMovesFromType(self, type: str):
 class battleEntity:
     def __init__(self, name: str):
         self.name = name
-        self.health = 1000
-        self.maxHealth = 1000
+        self.health = 300
+        self.maxHealth = 300
 
         self.type = random.choice(['fire', 'water'])
 

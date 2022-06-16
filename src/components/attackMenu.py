@@ -1,3 +1,4 @@
+import functools
 import random
 from struct import calcsize
 import time
@@ -63,20 +64,24 @@ class attackMenu():
 
         def updText():
             for dist in enemyBars:
-                enemy = dist['enemy']
+                enemy = dist['class']
                 bar = dist['bar']
                 bar.text = f'{enemy.health} | {enemy.maxHealth}'
 
                 bar.setPercent(enemy.health / enemy.maxHealth)
             for dist in teamBars:
-                t = dist['teammate']
+                t = dist['class']
                 bar = dist['bar']
                 bar.text = f'{t.health} | {t.maxHealth}'
+
+                bar.setPercent(enemy.health / enemy.maxHealth)
 
                 
 
         for enemy in enemies:
             t += 1
+
+            print(enemy)
 
             ename = createTextLabel(udim2(320 * t + 50 * t, 0, 0, .04), udim2.fromOffset(300, 35), f'enemy #{t}', stasis)
 
@@ -96,9 +101,9 @@ class attackMenu():
             bar = createScalarBar(udim2(320 * t + 50 * t, 0, -35 / 2, .1), udim2.fromOffset(300, 35), stasis)
 
             bar.foregroundColor = '#00ff00'
-            bar.backgroundColor = '#000000'
+            bar.backgroundColor = '#ffffff'
 
-            bar.textColor = '#ffffff'
+            bar.textColor = '#000000'
 
             bar.textSize = 10
 
@@ -114,7 +119,7 @@ class attackMenu():
                 'bar': bar,
                 'poly': poly,
                 'ename': ename,
-                'enemy': enemy
+                'class': enemy
             })
 
         moveIndex = 0
@@ -124,14 +129,15 @@ class attackMenu():
         def up(t, v):
             nonlocal nxtmv
             nonlocal moveIndex
-            self.queueMove(t, self.currentTarget, v['callback'])
+            self.queueMove(t, self.currentTarget, v['callback'], v['name'])
             moveIndex += 1
             nxtmv = True
+
+            print(t, v)
 
         t = 0
 
         for teammate in team:
-
             t += 1
 
             ename = createTextLabel(udim2(90 * t + 260* t - 300, 0, 0, .92), udim2.fromOffset(300 / 1.5, 35 / 1.5), f'teammate #{t}', stasis)
@@ -154,9 +160,9 @@ class attackMenu():
             bar = createScalarBar(udim2(90 * t + 260 * t - 300, 0, -35 / 1.25 / 2, .9), udim2.fromOffset(300 / 1.25, 35 / 1.25), stasis)
 
             bar.foregroundColor = '#00ff00'
-            bar.backgroundColor = '#000000'
+            bar.backgroundColor = '#ffffff'
 
-            bar.textColor = '#ffffff'
+            bar.textColor = '#000000'
 
             bar.textSize = 10
 
@@ -178,13 +184,20 @@ class attackMenu():
 
                     b.textColor = '#ffffff'
 
-                    b.onMouseClick.connect(lambda: up(teammate, v))
+                    b.onMouseClick.connect(functools.partial(up, teammate, v))
 
             attackFrame.backgroundColor = '#000000'
 
             attackframes.append(attackFrame)
             
             attackFrame.visible = False
+
+            teamBars.append({
+                'bar': bar,
+                'poly': poly,
+                'ename': ename,
+                'class': teammate
+            })
 
         updText()
 
@@ -195,10 +208,14 @@ class attackMenu():
             for i in attackframes:
                 i.visible = True
                 nonlocal nxtmv
+
                 while (not nxtmv):
                     time.sleep(1 / 60)
+
+                time.sleep(.1)
                 nxtmv = False
                 i.visible = False
+
             self.nextTurn()
             time.sleep(1)
             nextTurnButton.visible = True

@@ -143,7 +143,7 @@ class baseGui:
         size = None
 
         if self.tweening: return
-        (position, size) = self.getAbsolutePositionAndSize(self.position, self.size)
+        (position, size) = self.getSizeAndPositionFromUdim2(self.position, self.size)
         
         self.absolutePosition = position
         self.absoluteSize = size
