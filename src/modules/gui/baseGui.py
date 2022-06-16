@@ -3,6 +3,7 @@ import pygame.gfxdraw
 import numpy
 import uuid
 from pygame import Rect, Vector2
+from circ.thrd import createThread
 from modules.quark import switchParent
 import modules.mathf as mathf
 import gameConstants
@@ -118,6 +119,8 @@ class baseGui:
 
         self.absoluteType = absoluteType
 
+        self.tweening = False
+
         self.mid = str(uuid.uuid4())
 
         self.onHoverStart = phxSignal()
@@ -138,31 +141,9 @@ class baseGui:
         
         position = None
         size = None
-        if self.parent and type(self.parent) != str and type(self.parent) != worldClass:
-            pPos = self.parent.absolutePosition
-            pSize = self.parent.absoluteSize
 
-            fP = self.position.toScale()
-            fpO = self.position.toOffset()
-            fS = self.size.toScale()
-            fsO = self.size.toOffset()
-
-            position = Vector2(mathf.lerp(pPos.x, pPos.x + pSize.x, fP.x) + fpO.x, mathf.lerp(pPos.y, pPos.y + pSize.y, fP.y) + fpO.y)
-            size = Vector2(mathf.lerp(0, pSize.x, fS.x) + fsO.x, mathf.lerp(0, pSize.y, fS.y) + fsO.y)
-        
-        else:
-            container = renderCycle.localEnv["displayResolution"]
-
-            pPos = Vector2(0, 0)
-            pSize = Vector2(container[0], container[1])
-
-            fP = self.position.toScale()
-            fpO = self.position.toOffset()
-            fS = self.size.toScale()
-            fsO = self.size.toOffset()
-
-            position = Vector2(mathf.lerp(pPos.x, pPos.x + pSize.x, fP.x) + fpO.x, mathf.lerp(pPos.y, pPos.y + pSize.y, fP.y) + fpO.y)
-            size = Vector2(mathf.lerp(0, pSize.x, fS.x) + fsO.x, mathf.lerp(0, pSize.y, fS.y) + fsO.y)
+        if self.tweening: return
+        (position, size) = self.getAbsolutePositionAndSize(self.position, self.size)
         
         self.absolutePosition = position
         self.absoluteSize = size
@@ -171,6 +152,50 @@ class baseGui:
 
     def destroy(self):
         self.alive = False
+
+    def getSizeAndPositionFromUdim2(self, positionUdim: udim2, sizeUdim: udim2):
+        if self.parent and type(self.parent) != str and type(self.parent) != worldClass:
+            pPos = self.parent.absolutePosition
+            pSize = self.parent.absoluteSize
+
+            fP = positionUdim.toScale()
+            fpO = positionUdim.toOffset()
+            fS = sizeUdim.toScale()
+            fsO = sizeUdim.toOffset()
+
+            position = Vector2(mathf.lerp(pPos.x, pPos.x + pSize.x, fP.x) + fpO.x, mathf.lerp(pPos.y, pPos.y + pSize.y, fP.y) + fpO.y)
+            size = Vector2(mathf.lerp(0, pSize.x, fS.x) + fsO.x, mathf.lerp(0, pSize.y, fS.y) + fsO.y)
+            
+            return (position, size)
+        
+        else:
+            container = renderCycle.localEnv["displayResolution"]
+
+            pPos = Vector2(0, 0)
+            pSize = Vector2(container[0], container[1])
+
+            fP = positionUdim.toScale()
+            fpO = positionUdim.toOffset()
+            fS = sizeUdim.toScale()
+            fsO = sizeUdim.toOffset()
+
+            position = Vector2(mathf.lerp(pPos.x, pPos.x + pSize.x, fP.x) + fpO.x, mathf.lerp(pPos.y, pPos.y + pSize.y, fP.y) + fpO.y)
+            size = Vector2(mathf.lerp(0, pSize.x, fS.x) + fsO.x, mathf.lerp(0, pSize.y, fS.y) + fsO.y)
+
+            return (position, size)
+
+    def tween(self, v1: Vector2, time):
+        self.tweening = True
+        v0 = self.absolutePosition
+
+        d = (v1 - v0).magnitude()
+        
+        def z():
+            t = 0
+            while t < time:
+                t += d / time
+                self.absolutePosition = Vector2(mathf.lerp(v0.x, v1.x, t / time), mathf.lerp(v0.y, v1.y, t / time))
+        createThread(z)
 
     def update(self, dt, events):
 

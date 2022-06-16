@@ -46,7 +46,16 @@ class attackMenu():
 
         enemyBars = []
 
+        teamBars = []
+
         attackframes = []
+
+        teamIcons = []
+
+        enemyIcons = []
+
+        self.teamIcons = teamIcons
+        self.enemyIcons = enemyIcons
 
         nextTurnButton = createFloatingTextButton(udim2.fromScale(.92, .9), udim2.fromOffset(100, 100), '>', stasis)
 
@@ -59,6 +68,10 @@ class attackMenu():
                 bar.text = f'{enemy.health} | {enemy.maxHealth}'
 
                 bar.setPercent(enemy.health / enemy.maxHealth)
+            for dist in teamBars:
+                t = dist['teammate']
+                bar = dist['bar']
+                bar.text = f'{t.health} | {t.maxHealth}'
 
                 
 
@@ -75,10 +88,17 @@ class attackMenu():
             icon.backgroundVisible = False
             icon.borderVisible = False
 
+            enemyIcons.append({
+                'default': udim2(320 * t + 50 * t + 140, 0, 0, .25),
+                'icon': icon,
+            })
+
             bar = createScalarBar(udim2(320 * t + 50 * t, 0, -35 / 2, .1), udim2.fromOffset(300, 35), stasis)
 
             bar.foregroundColor = '#00ff00'
             bar.backgroundColor = '#000000'
+
+            bar.textColor = '#ffffff'
 
             bar.textSize = 10
 
@@ -108,13 +128,52 @@ class attackMenu():
             moveIndex += 1
             nxtmv = True
 
+        t = 0
+
         for teammate in team:
-            attackFrame = createFrame(udim2.fromScale(.64, .73), udim2.fromScale(.35, .25), stasis)
+
+            t += 1
+
+            ename = createTextLabel(udim2(90 * t + 260* t - 300, 0, 0, .92), udim2.fromOffset(300 / 1.5, 35 / 1.5), f'teammate #{t}', stasis)
+
+            ename.backgroundVisible = False
+            ename.borderVisible = False
+
+            ename.textColor = '#ffffff'
+
+            icon = createImage(udim2(90 * t + 260 * t + 140 - 300, 0, 0, .75), udim2.fromOffset(150 / 1.25, 150 / 1.25), f'src/images/{teammate.type}_phantom.png', stasis)
+
+            icon.backgroundVisible = False
+            icon.borderVisible = False
+
+            teamIcons.append({
+                'default': udim2(90 * t + 260 * t + 140 - 300, 0, 0, .75),
+                'icon': icon,
+            })
+
+            bar = createScalarBar(udim2(90 * t + 260 * t - 300, 0, -35 / 1.25 / 2, .9), udim2.fromOffset(300 / 1.25, 35 / 1.25), stasis)
+
+            bar.foregroundColor = '#00ff00'
+            bar.backgroundColor = '#000000'
+
+            bar.textColor = '#ffffff'
+
+            bar.textSize = 10
+
+            bar.text = '250 | 250'
+
+            poly = createPolygon(udim2(90 * t + 260 * t - 300, 0, 0, .9), udim2.fromOffset(0, 0), stasis)
+
+            poly.backgroundColor = typeColors[teammate.type]
+
+            teammate.healthChanged.connect(updText)
+
+            attackFrame = createFrame(udim2.fromScale(.69, .73), udim2.fromScale(.3, .25), stasis)
 
             for x in range(2):
                 for y in range(2):
                     v = teammate.moveset[x + y]
-                    b = createButton(udim2(10 * x + 280 * x + 10, 0, 10 * y + 110 * y + 10, 0), udim2.fromScale(.4, .3), v["name"], attackFrame)
+                    b = createButton(udim2(10 * x + 240 * x + 10, 0, 10 * y + 110 * y + 10, 0), udim2.fromScale(.4, .3), v["name"], attackFrame)
                     b.backgroundColor = typeColors[v["type"]]
 
                     b.textColor = '#ffffff'
