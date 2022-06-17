@@ -9,6 +9,7 @@ class imageLabel(baseGui):
         super().subLoad(rect, parent)
 
         self.properties['image'] = pygame.image.load('src/images/player_top.png')
+        self.properties['borderVisible'] = False
 
     def setImage(self, image: str):
         self.properties['image'] = pygame.image.load(image)

@@ -33,6 +33,10 @@ sprites: dict[str, sprite] = {}
 
 lastupd = time.time()
 
+INBATTLE = False
+
+GAMELOST = True
+
 def drawAllSpriteGroups():
 
     global lastupd

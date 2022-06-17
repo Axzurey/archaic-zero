@@ -60,6 +60,11 @@ def getRandomMovesFromType(self, type: str):
                 'callback': lambda target: self.attack(target, random.randrange(30, 50))
             },
             {
+                'name': 'obliteration',
+                'type': 'water',
+                'callback': lambda target: self.attack(target, random.randrange(300, 1550))
+            },
+            {
                 'name': 'tsunami',
                 'type': 'water',
                 'callback': lambda target: self.attack(target, random.randrange(25, 40))

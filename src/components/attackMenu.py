@@ -31,6 +31,7 @@ class attackMenu():
         self.enemies = enemies;
 
         self.currentTarget = self.enemies[0]
+        self.currentTeamTarget = self.team[0]
 
         self.frames = {
             "stasis": None
@@ -65,23 +66,35 @@ class attackMenu():
         def updText():
             for dist in enemyBars:
                 enemy = dist['class']
+
+                if enemy.health <= 0:
+                    enemyBars.remove(dist)
+                    dist['poly'].backgroundColor = '#FFFFFF'
+
                 bar = dist['bar']
                 bar.text = f'{enemy.health} | {enemy.maxHealth}'
 
                 bar.setPercent(enemy.health / enemy.maxHealth)
+                
             for dist in teamBars:
                 t = dist['class']
+
+                if t.health <= 0:
+                    teamBars.remove(dist)
+                    dist['poly'].backgroundColor = '#FFFFFF'
+
                 bar = dist['bar']
                 bar.text = f'{t.health} | {t.maxHealth}'
 
-                bar.setPercent(enemy.health / enemy.maxHealth)
+                bar.setPercent(t.health / t.maxHealth)
 
-                
+
+        self.enemySelect = createImage(udim2.fromScale(.5, .5), udim2.fromOffset(75, 75), 'src/images/enemy_select.png', stasis)
+        self.teamSelect = createImage(udim2.fromScale(.5, .5), udim2.fromOffset(75, 75), 'src/images/team_select.png', stasis)
+        
 
         for enemy in enemies:
             t += 1
-
-            print(enemy)
 
             ename = createTextLabel(udim2(320 * t + 50 * t, 0, 0, .04), udim2.fromOffset(300, 35), f'enemy #{t}', stasis)
 
@@ -119,7 +132,7 @@ class attackMenu():
                 'bar': bar,
                 'poly': poly,
                 'ename': ename,
-                'class': enemy
+                'class': enemy,
             })
 
         moveIndex = 0
@@ -129,11 +142,9 @@ class attackMenu():
         def up(t, v):
             nonlocal nxtmv
             nonlocal moveIndex
-            self.queueMove(t, self.currentTarget, v['callback'], v['name'])
+            self.queueMove(t, self.currentTarget, v['callback'], v['name'], 'you')
             moveIndex += 1
             nxtmv = True
-
-            print(t, v)
 
         t = 0
 
@@ -215,6 +226,11 @@ class attackMenu():
                 time.sleep(.1)
                 nxtmv = False
                 i.visible = False
+        
+            for enemy in enemies:
+                if enemy.health < 0: return
+                v = random.choice(enemy.moveset)
+                self.queueMove(enemy, self.currentTeamTarget, v['callback'], v['name'], 'enemy')
 
             self.nextTurn()
             time.sleep(1)
@@ -222,4 +238,13 @@ class attackMenu():
 
         nextTurnButton.onMouseClick.connect(run)
 
-        #createThread(self.update)
+    def setTargetIcons(self, target: battleEntity, team: bool):
+        if team:
+            t = self.team.index(target) + 1
+
+            self.teamSelect.position = udim2(90 * t + 260 * t + 140 - 300, 0, 0, .6)
+        else:
+
+            t = self.enemies.index(target) + 1
+
+            self.enemySelect.position = udim2(320 * t + 50 * t + 140, 0, 0, .4)
