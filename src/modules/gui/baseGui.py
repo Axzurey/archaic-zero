@@ -130,12 +130,12 @@ class baseGui:
         self.mouseDown = False;
         self.localFont = pygame.freetype.Font('src/fonts/Montserrat.ttf', 20)
 
-        self.alive = True;
-
     def subLoad(self, rect, parent):
         self.rect = rect
         if parent:
             self.parent = parent
+
+        self.alive = True
 
     def fix(self):
         
@@ -149,9 +149,6 @@ class baseGui:
         self.absoluteSize = size
 
         self.rect = pygame.Rect(position, size)
-
-    def destroy(self):
-        self.alive = False
 
     def getSizeAndPositionFromUdim2(self, positionUdim: udim2, sizeUdim: udim2):
         if self.parent and type(self.parent) != str and type(self.parent) != worldClass:
@@ -300,3 +297,14 @@ class baseGui:
 
         for child in self.children:
             child.update(dt, events)
+    def destroy(self):
+        self.alive = False
+
+        if self.parent is not None and type(self.parent) != str:
+            if type(self.parent) == worldClass:
+                self.parent.children.remove(self)
+            else:
+                self.parent.properties['children'].remove(self)
+
+        for each in self.children:
+            each.destroy()

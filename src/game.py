@@ -1,7 +1,10 @@
+import random
 import time
 from typing import Union
 from pygame import Vector2
 import pygame
+from battle.battleEntity import battleEntity
+from circ.thrd import createThread
 import client.renderCycle as renderCycle
 from data.exposed import addEntity, addSprite
 from modules.entity import entity
@@ -35,24 +38,60 @@ lastupd = time.time()
 
 INBATTLE = False
 
-GAMELOST = True
+LOADING_BATTLE = False
+
+GAMELOST = False
+
+entityNames = ['zestro', 'phi', 'nexus', 'luxer', 'tau', 'empt', 'ply', 'raidy', 'yozo', 'blaz', 'non', 'rias', 'olis', 'querss']
 
 def drawAllSpriteGroups():
 
-    global lastupd
+    global lastupd, LOADING_BATTLE, GAMELOST, INBATTLE
 
     dt = time.time() - lastupd
-
-    for v in spriteGroups.values():
-        v.update(spriteGroups)
+    if not INBATTLE:
+        for v in spriteGroups.values():
+            v.update(spriteGroups)
 
     screenCol = (255, 0, 255)
     screen = renderCycle.getScreen()
 
     screen.fill(screenCol)
 
-    for v in spriteGroups.values():
-        v.draw(renderCycle.getScreen())
+    if not INBATTLE:
+        for v in spriteGroups.values():
+            v.draw(renderCycle.getScreen())
+
+    if not INBATTLE and not LOADING_BATTLE:
+        for e in spriteGroups['otherEntities']:
+            if (spriteGroups['character'].sprites()[0].position - e.position).magnitude() < 50 + 10:
+
+                team = []
+                enemies = []
+
+                selectedNames = []
+
+                for i in range(3):
+                    name = None
+                    while name is None or name in selectedNames:
+                        name = random.choice(entityNames)
+
+                    selectedNames.append(name)
+                    team.append(battleEntity(name))
+
+                for i in range(3):
+                    name = None
+                    while name is None or name in selectedNames:
+                        name = random.choice(entityNames)
+
+                    selectedNames.append(name)
+                    enemies.append(battleEntity(name, e.type))
+
+                LOADING_BATTLE = True
+
+                from battle.battleLayout import createStandardBattle
+                
+                createThread(createStandardBattle, team, enemies)
 
 
     worldRoot.update(dt, renderCycle.lastEvents)

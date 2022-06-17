@@ -9,23 +9,13 @@ allStatusses = [
 
 types = ['fire', 'water', 'earth', 'air', 'light', 'dark']
 
-def getRandomMovesFromType(self, type: str):
+def getMovesFromType(self, type: str):
     moves = {
         'fire': [
             {
                 'name': 'Solar Flare',
                 'type': 'fire',
                 'callback': lambda target: self.attack(target, random.randrange(30, 50))
-            },
-            {
-                'name': 'Heat Wave [EX]',
-                'type': 'fire',
-                'callback': lambda target: (target.afflict({
-                    'type': 'burn',
-                    'duration': 3,
-                    'callback': lambda: self.takeDamage(random.randrange(10, 20)),
-                    'tick': 0
-                }), self.attack(target, random.randrange(10, 30)))
             },
             {
                 'name': 'volcanic eruption',
@@ -60,11 +50,6 @@ def getRandomMovesFromType(self, type: str):
                 'callback': lambda target: self.attack(target, random.randrange(30, 50))
             },
             {
-                'name': 'obliteration',
-                'type': 'water',
-                'callback': lambda target: self.attack(target, random.randrange(300, 1550))
-            },
-            {
                 'name': 'tsunami',
                 'type': 'water',
                 'callback': lambda target: self.attack(target, random.randrange(25, 40))
@@ -74,32 +59,101 @@ def getRandomMovesFromType(self, type: str):
                 'type': 'water',
                 'callback': lambda target: (self.attack(target, random.randrange(30, 50)), target.purgeAfflictions())
             },
+        ],
+        'earth': [
             {
-                'name': 'rainy day',
-                'type': 'water',
-                'callback': lambda target: (self.purgeAfflictions(), self.afflict({
-                    'type': 'regeneration',
-                    'duration': 3,
-                    'callback': lambda: self.heal(random.randrange(15, 30)),
-                    'tick': 0
-                }))
+                'name': 'earthquake',
+                'type': 'earth',
+                'callback': lambda target: self.attack(target, random.randrange(25, 40))
+            },
+            {
+                'name': 'stone throw',
+                'type': 'earth',
+                'callback': lambda target: self.attack(target, random.randrange(30, 45))
+            },
+            {
+                'name': 'geo construction',
+                'type': 'earth',
+                'callback': lambda target: self.attack(target, random.randrange(15, 50))
+            }
+        ],
+        'air': [
+            {
+                'name': 'wind blast',
+                'type': 'air',
+                'callback': lambda target: self.attack(target, random.randrange(2, 50))
+            },
+            {
+                'name': 'tornado',
+                'type': 'air',
+                'callback': lambda target: self.attack(target, random.randrange(25, 75))
+            },
+            {
+                'name': 'wind gust',
+                'type': 'air',
+                'callback': lambda target: self.attack(target, random.randrange(15, 40))
+            }
+        ],
+        'light': [
+            {
+                'name': 'lightning bolt',
+                'type': 'light',
+                'callback': lambda target: self.attack(target, random.randrange(31, 40))
+            },
+            {
+                'name': 'pulsar of light',
+                'type': 'light',
+                'callback': lambda target: self.attack(target, random.randrange(1, 50, 5))
+            },
+            {
+                'name': 'photon ray',
+                'type': 'light',
+                'callback': lambda target: self.attack(target, random.randrange(-30, 50))
+            },
+            {
+                'name': 'trick of the light',
+                'type': 'light',
+                'callback': lambda target: self.attack(target, random.randrange(-25, 75))
+            }
+        ],
+        'dark': [
+            {
+                'name': 'darkness calling',
+                'type': 'dark',
+
+                'callback': lambda target: self.attack(target, random.randrange(30, 50))
+            },
+            {
+                'name': 'Absolute Envelope',
+                'type': 'dark',
+                'callback': lambda target: self.attack(target, random.randrange(0, 100))
+            },
+            {
+                'name': 'facade',
+                'type': 'dark',
+                'callback': lambda target: (self.attack(target, random.randrange(0, 50)), self.attack(target, random.randrange(0, 50)), self.attack(target, random.randrange(0, 50)))
+            },
+            {
+                'name': 'nighttime',
+                'type': 'dark',
+                'callback': lambda target: self.attack(target, random.randrange(1, 55))
             }
         ]
     }
 
-    return [random.choice(moves[type]) for _ in range(4)]
+    return moves[type]
 
 
 
 class battleEntity:
-    def __init__(self, name: str):
+    def __init__(self, name: str, type: str = None):
         self.name = name
-        self.health = 300
-        self.maxHealth = 300
+        self.health = 100
+        self.maxHealth = 100
 
-        self.type = random.choice(['fire', 'water'])
+        self.type = random.choice(['fire', 'water', 'air', 'earth', 'dark', 'light']) if not type else type
 
-        self.moveset = getRandomMovesFromType(self, self.type)
+        self.moveset = getMovesFromType(self, self.type)
 
         self.statusses = []
 

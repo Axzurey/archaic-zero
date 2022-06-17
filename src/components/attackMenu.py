@@ -41,6 +41,8 @@ class attackMenu():
 
         stasis = self.frames["stasis"]
 
+        stasis.visible = False
+
         #stasis.transparency = 1;
         #stasis.borderTransparency = 1;
 
@@ -96,7 +98,7 @@ class attackMenu():
         for enemy in enemies:
             t += 1
 
-            ename = createTextLabel(udim2(320 * t + 50 * t, 0, 0, .04), udim2.fromOffset(300, 35), f'enemy #{t}', stasis)
+            ename = createTextLabel(udim2(320 * t + 50 * t, 0, 0, .04), udim2.fromOffset(300, 35), enemy.name, stasis)
 
             ename.backgroundVisible = False
             ename.borderVisible = False
@@ -151,7 +153,7 @@ class attackMenu():
         for teammate in team:
             t += 1
 
-            ename = createTextLabel(udim2(90 * t + 260* t - 300, 0, 0, .92), udim2.fromOffset(300 / 1.5, 35 / 1.5), f'teammate #{t}', stasis)
+            ename = createTextLabel(udim2(90 * t + 260* t - 300, 0, 0, .92), udim2.fromOffset(300 / 1.5, 35 / 1.5), teammate.name, stasis)
 
             ename.backgroundVisible = False
             ename.borderVisible = False
@@ -228,7 +230,7 @@ class attackMenu():
                 i.visible = False
         
             for enemy in enemies:
-                if enemy.health < 0: return
+                if enemy.health <= 0: continue
                 v = random.choice(enemy.moveset)
                 self.queueMove(enemy, self.currentTeamTarget, v['callback'], v['name'], 'enemy')
 

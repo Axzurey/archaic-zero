@@ -3,7 +3,7 @@ import time
 from circ.thrd import createThread
 from components.attackMenu import attackMenu
 import battle.battleEntity as battleEntity
-from game import INBATTLE, createFrame, createImage, createTextLabel
+
 from modules.gui.baseGui import baseGui
 from modules.udim2 import udim2
 from worldClass import worldRoot
@@ -11,20 +11,10 @@ import game
 
 ts = ['water', 'earth', 'air', 'light', 'dark', 'fire']
 turn = 0
-def createStandardBattle():
+def createStandardBattle(team: list[battleEntity.battleEntity], enemies: list[battleEntity.battleEntity]):
+    from game import INBATTLE, createFrame, createImage, createTextLabel
     global turn
     turn = 1;
-
-    enemies = []
-    team = []
-
-    for i in range(3):
-        enemy = battleEntity.battleEntity(f'enemy #{i}')
-        enemies.append(enemy)
-    
-    for i in range(3):
-        member = battleEntity.battleEntity(f'teammate #{i}')
-        team.append(member)
 
     moveQueue = []
 
@@ -49,26 +39,38 @@ def createStandardBattle():
             if member.health > 0:
                 return member
 
+    def destroy():
+        nonlocal atkMenu
+
+        atkMenu.frames["stasis"].destroy()
+
     def nextTurn():
         nonlocal atkMenu
         global turn
-        nonlocal hitEffect
+        nonlocal hitEffect, usedAttackFrame
         turn += 1
-        print(f'Turn {turn}')
         i = 0
         for movedata in moveQueue:
 
             if getNextEnemy() is None:
+                time.sleep(1.5)
+                usedAttackText.text = 'No enemies left, you win!'
+                time.sleep(1.5)
                 game.INBATTLE = False
+                destroy()
                 break #you win
             if getNextTeamMember() is None:
+                time.sleep(1.5)
+                usedAttackText.text = 'No teammates left, you lose!'
+                time.sleep(1.5)
                 game.INBATTLE = False
                 game.GAMELOST = True
+                destroy()
                 break #you lose
 
-            usedAttackFrame.visible = True
+            time.sleep(1.5)
 
-            time.sleep(2)
+            usedAttackFrame.visible = True
 
             if movedata['type'] == 'you':
                 movedata['target'] = getNextEnemy()
@@ -101,13 +103,21 @@ def createStandardBattle():
 
                 hitEffect = udim2(320 * t + 50 * t + 140, 0, 0, .25)
 
+            if movedata['sender'].health <= 0:
+                i += 1
+                print(f'{movedata["sender"].name} is dead, skipping')
+                usedAttackFrame.visible = False
+
+                hitEffect.visible = False
+                continue
+
             usedAttackText.text = movedata['sender'].name + ' used ' + movedata['name']
 
             movedata['move'](movedata['target'])
 
-            usedAttackFrame.visible = False
-
             time.sleep(1.5)
+
+            usedAttackFrame.visible = False
 
             hitEffect.visible = False
 
@@ -122,9 +132,13 @@ def createStandardBattle():
 
     atkMenu = attackMenu(team, enemies, nextTurn, queueMove)
 
+    atkMenu.setTargetIcons(getNextTeamMember(), True)
+
+    atkMenu.setTargetIcons(getNextEnemy(), False)
+
     usedAttackFrame = createFrame(udim2.fromScale(0, .45), udim2.fromScale(1, .15), worldRoot)
 
-    usedAttackFrame.visible = False
+    usedAttackFrame.visible = True
 
     usedAttackText = createTextLabel(udim2.fromOffset(0, 0), udim2.fromScale(1, 1), '', usedAttackFrame)
 
@@ -137,8 +151,19 @@ def createStandardBattle():
     usedAttackText.backgroundTransparency = 1
     usedAttackText.borderTransparency = 1
 
+    usedAttackText.text = 'BATTLE STARTED!!!'
+
     hitEffect = createImage(udim2(0, 0, 0, 0), udim2.fromOffset(100, 100), 'src/images/hit.png')
 
     hitEffect.visible = False
+
+    time.sleep(1.5)
+
+    atkMenu.frames['stasis'].visible = True
+
+    usedAttackFrame.visible = False
+
+    game.INBATTLE = True
+    game.LOADING_BATTLE = False
 
         #print('NEXT TURN DONE!')

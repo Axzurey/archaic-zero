@@ -20,10 +20,10 @@ time.sleep(1)
 
 loadWorld()
 
-#player = createPlayer(pygame.Vector2(0, 0), pygame.Vector2(50, 50), 'src/images/player_top.png')
+player = createPlayer(pygame.Vector2(0, 0), pygame.Vector2(50, 50), 'src/images/player_top.png')
 
-#player.speed = 20
+player.speed = 20
 
-createStandardBattle()
+#createStandardBattle()
 
 renderCycle.startCycle()
