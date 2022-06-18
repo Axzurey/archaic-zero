@@ -8,6 +8,11 @@ class playerEntity(entity):
 
     def update(self):
 
+        import game
+
+        if game.LOADING_BATTLE or game.INBATTLE:
+            return
+
         r = inputService.isKeyDown(pygame.K_RIGHT)
         l = inputService.isKeyDown(pygame.K_LEFT)
         u = inputService.isKeyDown(pygame.K_UP)

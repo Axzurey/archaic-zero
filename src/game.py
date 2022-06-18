@@ -66,6 +66,8 @@ def drawAllSpriteGroups():
         for e in spriteGroups['otherEntities']:
             if (spriteGroups['character'].sprites()[0].position - e.position).magnitude() < 50 + 10:
 
+                e.kill()
+
                 team = []
                 enemies = []
 

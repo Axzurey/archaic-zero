@@ -15,8 +15,8 @@ typeColors = {
     'water': '#0000ff',
     'earth': '#00ff00',
     'air': '#ffff00',
-    'light': '#ff00ff',
-    'dark': '#00ffff',
+    'light': '#ffaaff',
+    'dark': '#010101',
 }
 
 tx = 0
@@ -218,7 +218,11 @@ class attackMenu():
             nonlocal nextTurnButton
             nextTurnButton.visible = False
             time.sleep(.1)
-            for i in attackframes:
+            for z in range(3):
+                i = attackframes[z]
+                p = self.team[z]
+                if p.health <= 0:
+                    continue
                 i.visible = True
                 nonlocal nxtmv
 

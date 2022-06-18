@@ -50,11 +50,13 @@ def createStandardBattle(team: list[battleEntity.battleEntity], enemies: list[ba
         nonlocal hitEffect, usedAttackFrame
         turn += 1
         i = 0
+
         for movedata in moveQueue:
 
             if getNextEnemy() is None:
                 time.sleep(1.5)
                 usedAttackText.text = 'No enemies left, you win!'
+                usedAttackFrame.visible = True
                 time.sleep(1.5)
                 game.INBATTLE = False
                 destroy()
@@ -62,6 +64,7 @@ def createStandardBattle(team: list[battleEntity.battleEntity], enemies: list[ba
             if getNextTeamMember() is None:
                 time.sleep(1.5)
                 usedAttackText.text = 'No teammates left, you lose!'
+                usedAttackFrame.visible = True
                 time.sleep(1.5)
                 game.INBATTLE = False
                 game.GAMELOST = True
@@ -123,6 +126,44 @@ def createStandardBattle(team: list[battleEntity.battleEntity], enemies: list[ba
 
             i += 1
 
+            if getNextEnemy() is None:
+                time.sleep(1.5)
+                usedAttackText.text = 'No enemies left, you win!'
+                usedAttackFrame.visible = True
+                time.sleep(1.5)
+                game.INBATTLE = False
+                destroy()
+                return
+
+            if getNextTeamMember() is None:
+                time.sleep(1.5)
+                usedAttackText.text = 'No teammates left, you lose!'
+                usedAttackFrame.visible = True
+                time.sleep(1.5)
+                game.INBATTLE = False
+                game.GAMELOST = True
+                destroy()
+                return
+
+        if getNextEnemy() is None:
+            time.sleep(1.5)
+            usedAttackText.text = 'No enemies left, you win!'
+            usedAttackFrame.visible = True
+            time.sleep(1.5)
+            game.INBATTLE = False
+            destroy()
+            return
+
+        if getNextTeamMember() is None:
+            time.sleep(1.5)
+            usedAttackText.text = 'No teammates left, you lose!'
+            usedAttackFrame.visible = True
+            time.sleep(1.5)
+            game.INBATTLE = False
+            game.GAMELOST = True
+            destroy()
+            return
+
         for enemy in enemies:
             enemy.update()
         for teammate in team:
@@ -136,7 +177,7 @@ def createStandardBattle(team: list[battleEntity.battleEntity], enemies: list[ba
 
     atkMenu.setTargetIcons(getNextEnemy(), False)
 
-    usedAttackFrame = createFrame(udim2.fromScale(0, .45), udim2.fromScale(1, .15), worldRoot)
+    usedAttackFrame = createFrame(udim2.fromScale(0, .45), udim2.fromScale(1, .15), atkMenu.frames['stasis'])
 
     usedAttackFrame.visible = True
 
